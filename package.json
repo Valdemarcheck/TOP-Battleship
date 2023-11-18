@@ -4,6 +4,7 @@
   "description": "This is my implementation of \"Battleship\" project from the Odin Project Curriculum. It showcases my basic knowledge of how TDD workflow works (powered by Jest)",
   "main": "index.js",
   "scripts": {
+    "test": "jest ./test --watchAll",
     "gen": "webpack",
     "run": "webpack && webpack serve --open"
   },
@@ -11,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^29.7.0",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
