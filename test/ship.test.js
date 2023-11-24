@@ -11,6 +11,6 @@ describe("Ship class", () => {
     const ship = new Ship(2);
     ship.hit();
     ship.hit();
-    expect(ship.isSunk()).toBe(true);
+    expect(ship.isSunk).toBe(true);
   });
 });
