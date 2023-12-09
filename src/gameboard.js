@@ -54,7 +54,7 @@ export class Gameboard {
     this.#addShipToListOfShips(shipObj);
   }
 
-  isFilledCell(x, y) {
+  isShipPlacedOnCoordinates(x, y) {
     const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
     return !!this.shipsOnBoardArray[actualY][actualX];
   }

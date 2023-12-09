@@ -17,41 +17,41 @@ test("Gameboard places horizontal 1x1 ship at certain coordinates", () => {
   const ship = new Ship(1);
   const board = new Gameboard();
   board.place({ shipObj: ship, isVertical: false, originX: 10, originY: 10 });
-  expect(board.isFilledCell(10, 10)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(10, 10)).toBe(true);
 });
 
 test("Gameboard places horizontal 2x1 ship at certain coordinates", () => {
   const ship = new Ship(2);
   const board = new Gameboard();
   board.place({ shipObj: ship, isVertical: false, originX: 5, originY: 5 });
-  expect(board.isFilledCell(5, 5)).toBe(true);
-  expect(board.isFilledCell(6, 5)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(5, 5)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(6, 5)).toBe(true);
 });
 
 test("Gameboard places horizontal 3x1 ship at certain coordinates", () => {
   const ship = new Ship(3);
   const board = new Gameboard();
   board.place({ shipObj: ship, isVertical: false, originX: 5, originY: 5 });
-  expect(board.isFilledCell(5, 5)).toBe(true);
-  expect(board.isFilledCell(6, 5)).toBe(true);
-  expect(board.isFilledCell(7, 5)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(5, 5)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(6, 5)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(7, 5)).toBe(true);
 });
 
 test("Gameboard places vertical 2x1 ship at certain coordinates", () => {
   const ship = new Ship(2);
   const board = new Gameboard();
   board.place({ shipObj: ship, isVertical: true, originX: 5, originY: 5 });
-  expect(board.isFilledCell(5, 5)).toBe(true);
-  expect(board.isFilledCell(5, 4)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(5, 5)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(5, 4)).toBe(true);
 });
 
 test("Gameboard places vertical 3x1 ship at certain coordinates", () => {
   const ship = new Ship(3);
   const board = new Gameboard();
   board.place({ shipObj: ship, isVertical: true, originX: 5, originY: 5 });
-  expect(board.isFilledCell(5, 3)).toBe(true);
-  expect(board.isFilledCell(5, 4)).toBe(true);
-  expect(board.isFilledCell(5, 5)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(5, 3)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(5, 4)).toBe(true);
+  expect(board.isShipPlacedOnCoordinates(5, 5)).toBe(true);
 });
 
 test("Placing ships isn't allowed out of bounds (1)", () => {
