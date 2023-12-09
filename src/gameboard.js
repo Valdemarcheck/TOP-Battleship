@@ -36,7 +36,10 @@ export class Gameboard {
       throw new Error("Given coordinates are out of bounds of the gameboard");
     }
 
-    const [startX, startY] = this.#convertCoordinates(originX, originY);
+    const [startX, startY] = this.#convertBoardCoordsToArrayCoords(
+      originX,
+      originY
+    );
 
     if (isVertical) {
       for (let currentY = 0; currentY < shipObj.length; currentY++) {
@@ -52,7 +55,7 @@ export class Gameboard {
   }
 
   isFilledPath({ pathLength, isVertical, startX, startY }) {
-    const [actualStartX, actualStartY] = this.#convertCoordinates(
+    const [actualStartX, actualStartY] = this.#convertBoardCoordsToArrayCoords(
       startX,
       startY
     );
@@ -75,12 +78,12 @@ export class Gameboard {
   }
 
   isFilledCell(x, y) {
-    const [actualX, actualY] = this.#convertCoordinates(x, y);
+    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
     return !!this.shipsOnBoardArray[actualY][actualX];
   }
 
   isHit(x, y) {
-    const [actualX, actualY] = this.#convertCoordinates(x, y);
+    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
     return this.hitCellsBoardArray[actualY][actualX];
   }
 
@@ -88,7 +91,7 @@ export class Gameboard {
     if (this.#areCoordinatesOutOfBounds(x, y) || this.isHit(x, y)) {
       throw new Error("Given coordinates are out of bounds of the gameboard");
     }
-    const [actualX, actualY] = this.#convertCoordinates(x, y);
+    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
     this.hitCellsBoardArray[actualY][actualX] = true;
 
     const hitShip = this.shipsOnBoardArray[actualY][actualX];
@@ -107,7 +110,7 @@ export class Gameboard {
     this.listOfShips.push(shipObj);
   }
 
-  #convertCoordinates(x, y) {
+  #convertBoardCoordsToArrayCoords(x, y) {
     return [x - 1, y - 1];
   }
 
