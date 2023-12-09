@@ -16,35 +16,56 @@ function Ship(length) {
 test("IsFilledPath detects filled cells properly (1)", () => {
   const ship = new Ship(1);
   const board = new Gameboard();
-  board.place(ship, false, 1, 1);
-  expect(board.isFilledPath(1, false, 1, 1)).toBe(true);
+  board.place({ shipObj: ship, isVertical: false, originX: 1, originY: 1 });
+  expect(
+    board.isFilledPath({
+      pathLength: 1,
+      isVertical: false,
+      startX: 1,
+      startY: 1,
+    })
+  ).toBe(true);
 });
 
 test("IsFilledPath detects filled cells properly (2)", () => {
   const ship = new Ship(2);
   const board = new Gameboard();
-  board.place(ship, false, 5, 5);
-  expect(board.isFilledPath(2, false, 5, 5)).toBe(true);
+  board.place({ shipObj: ship, isVertical: false, originX: 5, originY: 5 });
+  expect(
+    board.isFilledPath({
+      pathLength: 2,
+      isVertical: false,
+      startX: 5,
+      startY: 5,
+    })
+  ).toBe(true);
 });
 
 test("IsFilledPath detects filled cells properly (3)", () => {
   const ship = new Ship(5);
   const board = new Gameboard();
-  board.place(ship, true, 5, 7);
-  expect(board.isFilledPath(3, false, 3, 5)).toBe(true);
+  board.place({ shipObj: ship, isVertical: true, originX: 5, originY: 7 });
+  expect(
+    board.isFilledPath({
+      pathLength: 3,
+      isVertical: false,
+      startX: 3,
+      startY: 5,
+    })
+  ).toBe(true);
 });
 
 test("Gameboard places horizontal 1x1 ship at certain coordinates", () => {
   const ship = new Ship(1);
   const board = new Gameboard();
-  board.place(ship, false, 10, 10);
+  board.place({ shipObj: ship, isVertical: false, originX: 10, originY: 10 });
   expect(board.isFilledCell(10, 10)).toBe(true);
 });
 
 test("Gameboard places horizontal 2x1 ship at certain coordinates", () => {
   const ship = new Ship(2);
   const board = new Gameboard();
-  board.place(ship, false, 5, 5);
+  board.place({ shipObj: ship, isVertical: false, originX: 5, originY: 5 });
   expect(board.isFilledCell(5, 5)).toBe(true);
   expect(board.isFilledCell(6, 5)).toBe(true);
 });
@@ -52,7 +73,7 @@ test("Gameboard places horizontal 2x1 ship at certain coordinates", () => {
 test("Gameboard places horizontal 3x1 ship at certain coordinates", () => {
   const ship = new Ship(3);
   const board = new Gameboard();
-  board.place(ship, false, 5, 5);
+  board.place({ shipObj: ship, isVertical: false, originX: 5, originY: 5 });
   expect(board.isFilledCell(5, 5)).toBe(true);
   expect(board.isFilledCell(6, 5)).toBe(true);
   expect(board.isFilledCell(7, 5)).toBe(true);
@@ -61,7 +82,7 @@ test("Gameboard places horizontal 3x1 ship at certain coordinates", () => {
 test("Gameboard places vertical 2x1 ship at certain coordinates", () => {
   const ship = new Ship(2);
   const board = new Gameboard();
-  board.place(ship, true, 5, 5);
+  board.place({ shipObj: ship, isVertical: true, originX: 5, originY: 5 });
   expect(board.isFilledCell(5, 5)).toBe(true);
   expect(board.isFilledCell(5, 4)).toBe(true);
 });
@@ -69,17 +90,25 @@ test("Gameboard places vertical 2x1 ship at certain coordinates", () => {
 test("Gameboard places vertical 3x1 ship at certain coordinates", () => {
   const ship = new Ship(3);
   const board = new Gameboard();
-  board.place(ship, true, 5, 5);
-  expect(board.isFilledCell(5, 5)).toBe(true);
-  expect(board.isFilledCell(5, 4)).toBe(true);
+  board.place({ shipObj: ship, isVertical: true, originX: 5, originY: 5 });
   expect(board.isFilledCell(5, 3)).toBe(true);
+  expect(board.isFilledCell(5, 4)).toBe(true);
+  expect(board.isFilledCell(5, 5)).toBe(true);
 });
 
-test("Placing ships isn't allowed out of bounds", () => {
+test("Placing ships isn't allowed out of bounds (1)", () => {
   const ship = new Ship(2);
   const board = new Gameboard();
   expect(() => {
-    board.place(ship, false, 10, 10);
+    board.place({ shipObj: ship, isVertical: true, originX: 15, originY: 15 });
+  }).toThrow();
+});
+
+test("Placing ships isn't allowed out of bounds (2)", () => {
+  const ship = new Ship(2);
+  const board = new Gameboard();
+  expect(() => {
+    board.place({ shipObj: ship, isVertical: false, originX: 10, originY: 10 });
   }).toThrow();
 });
 
@@ -88,9 +117,9 @@ test("Placing ships isn't allowed on a taken cell (1)", () => {
   const ship2 = new Ship(1);
   const board = new Gameboard();
 
-  board.place(ship1, true, 3, 3);
+  board.place({ shipObj: ship1, isVertical: false, originX: 3, originY: 3 });
   expect(() => {
-    board.place(ship2, true, 3, 3);
+    board.place({ shipObj: ship2, isVertical: true, originX: 3, originY: 3 });
   }).toThrow();
 });
 
@@ -99,9 +128,9 @@ test("Placing ships isn't allowed on a taken cell (2)", () => {
   const ship2 = new Ship(3);
   const board = new Gameboard();
 
-  board.place(ship1, false, 3, 3);
+  board.place({ shipObj: ship1, isVertical: false, originX: 3, originY: 3 });
   expect(() => {
-    board.place(ship2, false, 2, 3);
+    board.place({ shipObj: ship2, isVertical: false, originX: 2, originY: 3 });
   }).toThrow();
 });
 
@@ -120,7 +149,7 @@ test("receiveAttack works on ship cells", () => {
   const ship = new Ship(5);
   const board = new Gameboard();
 
-  board.place(ship, false, 3, 3);
+  board.place({ shipObj: ship, isVertical: false, originX: 3, originY: 3 });
   board.receiveAttack(5, 3);
 
   expect(board.isHit(5, 3)).toBe(true);
@@ -146,7 +175,7 @@ test("areAllShipsSunk works for 1 ship", () => {
   const ship = new Ship(1);
 
   const board = new Gameboard();
-  board.place(ship, false, 1, 1);
+  board.place({ shipObj: ship, isVertical: false, originX: 1, originY: 1 });
   expect(board.areAllShipsSunk).toBe(false);
 
   board.receiveAttack(1, 1);
@@ -158,8 +187,8 @@ test("areAllShipsSunk works for 2 ships", () => {
   const ship2 = new Ship(3);
 
   const board = new Gameboard();
-  board.place(ship1, false, 1, 1);
-  board.place(ship2, true, 3, 3);
+  board.place({ shipObj: ship1, isVertical: false, originX: 1, originY: 1 });
+  board.place({ shipObj: ship2, isVertical: true, originX: 3, originY: 3 });
 
   board.receiveAttack(1, 1);
   expect(board.areAllShipsSunk).toBe(false);
@@ -176,9 +205,9 @@ test("Passes mockup game session complex test", () => {
   const ship3 = new Ship(5);
 
   const board = new Gameboard();
-  board.place(ship1, false, 3, 5);
-  board.place(ship2, true, 2, 3);
-  board.place(ship3, true, 9, 5);
+  board.place({ shipObj: ship1, isVertical: false, originX: 3, originY: 5 });
+  board.place({ shipObj: ship2, isVertical: true, originX: 2, originY: 3 });
+  board.place({ shipObj: ship3, isVertical: true, originX: 9, originY: 5 });
   expect(board.areAllShipsSunk).toBe(false);
 
   // ship1

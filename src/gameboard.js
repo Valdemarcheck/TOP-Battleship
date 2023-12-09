@@ -17,16 +17,26 @@ export class Gameboard {
 
   constructor() {}
 
-  place(shipObj, isVertical, x, y) {
+  place({ shipObj, isVertical, originX, originY }) {
     if (
-      this.#areCoordinatesOutOfBounds(x, y) ||
-      this.#areEndCoordinatesOutOfBounds(shipObj.length, isVertical, x, y) ||
-      this.isFilledPath(shipObj.length, isVertical, x, y)
+      this.#areCoordinatesOutOfBounds(originX, originY) ||
+      this.#areEndCoordinatesOutOfBounds({
+        shipLength: shipObj.length,
+        isVertical,
+        startX: originX,
+        startY: originY,
+      }) ||
+      this.isFilledPath({
+        pathLength: shipObj.length,
+        isVertical,
+        startX: originX,
+        startY: originY,
+      })
     ) {
       throw new Error("Given coordinates are out of bounds of the gameboard");
     }
 
-    const [startX, startY] = this.#convertCoordinates(x, y);
+    const [startX, startY] = this.#convertCoordinates(originX, originY);
 
     if (isVertical) {
       for (let currentY = 0; currentY < shipObj.length; currentY++) {
@@ -41,7 +51,7 @@ export class Gameboard {
     this.#addShipToListOfShips(shipObj);
   }
 
-  isFilledPath(pathLength, isVertical, startX, startY) {
+  isFilledPath({ pathLength, isVertical, startX, startY }) {
     const [actualStartX, actualStartY] = this.#convertCoordinates(
       startX,
       startY
@@ -105,12 +115,12 @@ export class Gameboard {
     return x < 0 || y < 0 || x > BOARD_SIZE || y > BOARD_SIZE;
   }
 
-  #areEndCoordinatesOutOfBounds(shipLength, isVertical, x, y) {
+  #areEndCoordinatesOutOfBounds({ shipLength, isVertical, startX, startY }) {
     if (isVertical) {
-      const endY = y - shipLength;
+      const endY = startY - shipLength;
       return endY < 0;
     } else {
-      const endX = x + shipLength - 1;
+      const endX = startX + shipLength - 1;
       return endX > BOARD_SIZE;
     }
   }
