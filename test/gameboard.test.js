@@ -13,48 +13,6 @@ function Ship(length) {
   });
 }
 
-test("IsFilledPath detects filled cells properly (1)", () => {
-  const ship = new Ship(1);
-  const board = new Gameboard();
-  board.place({ shipObj: ship, isVertical: false, originX: 1, originY: 1 });
-  expect(
-    board.isFilledPath({
-      pathLength: 1,
-      isVertical: false,
-      startX: 1,
-      startY: 1,
-    })
-  ).toBe(true);
-});
-
-test("IsFilledPath detects filled cells properly (2)", () => {
-  const ship = new Ship(2);
-  const board = new Gameboard();
-  board.place({ shipObj: ship, isVertical: false, originX: 5, originY: 5 });
-  expect(
-    board.isFilledPath({
-      pathLength: 2,
-      isVertical: false,
-      startX: 5,
-      startY: 5,
-    })
-  ).toBe(true);
-});
-
-test("IsFilledPath detects filled cells properly (3)", () => {
-  const ship = new Ship(5);
-  const board = new Gameboard();
-  board.place({ shipObj: ship, isVertical: true, originX: 5, originY: 7 });
-  expect(
-    board.isFilledPath({
-      pathLength: 3,
-      isVertical: false,
-      startX: 3,
-      startY: 5,
-    })
-  ).toBe(true);
-});
-
 test("Gameboard places horizontal 1x1 ship at certain coordinates", () => {
   const ship = new Ship(1);
   const board = new Gameboard();
@@ -134,17 +92,6 @@ test("Placing ships isn't allowed on a taken cell (2)", () => {
   }).toThrow();
 });
 
-test("isHit detects cells that aren't hit", () => {
-  const board = new Gameboard();
-  expect(board.isHit(1, 1)).toBe(false);
-});
-
-test("receiveAttack works on empty cells", () => {
-  const board = new Gameboard();
-  board.receiveAttack(1, 1);
-  expect(board.isHit(1, 1)).toBe(true);
-});
-
 test("receiveAttack works on ship cells", () => {
   const ship = new Ship(5);
   const board = new Gameboard();
@@ -152,7 +99,6 @@ test("receiveAttack works on ship cells", () => {
   board.place({ shipObj: ship, isVertical: false, originX: 3, originY: 3 });
   board.receiveAttack(5, 3);
 
-  expect(board.isHit(5, 3)).toBe(true);
   expect(ship.timesHit).toBe(1);
 });
 

@@ -26,7 +26,7 @@ export class Gameboard {
         startX: originX,
         startY: originY,
       }) ||
-      this.isFilledPath({
+      this.#isFilledPath({
         pathLength: shipObj.length,
         isVertical,
         startX: originX,
@@ -54,7 +54,36 @@ export class Gameboard {
     this.#addShipToListOfShips(shipObj);
   }
 
-  isFilledPath({ pathLength, isVertical, startX, startY }) {
+  isFilledCell(x, y) {
+    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
+    return !!this.shipsOnBoardArray[actualY][actualX];
+  }
+
+  receiveAttack(x, y) {
+    if (this.#areCoordinatesOutOfBounds(x, y) || this.#isHit(x, y)) {
+      throw new Error("Given coordinates are out of bounds of the gameboard");
+    }
+    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
+    this.hitCellsBoardArray[actualY][actualX] = true;
+
+    const hitShip = this.shipsOnBoardArray[actualY][actualX];
+    if (hitShip) {
+      hitShip.hit();
+    }
+  }
+
+  get areAllShipsSunk() {
+    return this.listOfShips.every((shipObj) => {
+      return shipObj.isSunk;
+    });
+  }
+
+  #isHit(x, y) {
+    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
+    return this.hitCellsBoardArray[actualY][actualX];
+  }
+
+  #isFilledPath({ pathLength, isVertical, startX, startY }) {
     const [actualStartX, actualStartY] = this.#convertBoardCoordsToArrayCoords(
       startX,
       startY
@@ -75,35 +104,6 @@ export class Gameboard {
     }
 
     return false;
-  }
-
-  isFilledCell(x, y) {
-    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
-    return !!this.shipsOnBoardArray[actualY][actualX];
-  }
-
-  isHit(x, y) {
-    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
-    return this.hitCellsBoardArray[actualY][actualX];
-  }
-
-  receiveAttack(x, y) {
-    if (this.#areCoordinatesOutOfBounds(x, y) || this.isHit(x, y)) {
-      throw new Error("Given coordinates are out of bounds of the gameboard");
-    }
-    const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
-    this.hitCellsBoardArray[actualY][actualX] = true;
-
-    const hitShip = this.shipsOnBoardArray[actualY][actualX];
-    if (hitShip) {
-      hitShip.hit();
-    }
-  }
-
-  get areAllShipsSunk() {
-    return this.listOfShips.every((shipObj) => {
-      return shipObj.isSunk;
-    });
   }
 
   #addShipToListOfShips(shipObj) {
