@@ -19,7 +19,7 @@ export class Gameboard {
 
   place({ shipObj, isVertical, originX, originY }) {
     if (
-      this.#areCoordinatesOutOfBounds(originX, originY) ||
+      this.#areStartCoordinatesOutOfBounds(originX, originY) ||
       this.#areEndCoordinatesOutOfBounds({
         shipLength: shipObj.length,
         isVertical,
@@ -60,7 +60,7 @@ export class Gameboard {
   }
 
   receiveAttack(x, y) {
-    if (this.#areCoordinatesOutOfBounds(x, y) || this.#isHit(x, y)) {
+    if (this.#areStartCoordinatesOutOfBounds(x, y) || this.#isHit(x, y)) {
       throw new Error("Given coordinates are out of bounds of the gameboard");
     }
     const [actualX, actualY] = this.#convertBoardCoordsToArrayCoords(x, y);
@@ -114,7 +114,7 @@ export class Gameboard {
     return [x - 1, y - 1];
   }
 
-  #areCoordinatesOutOfBounds(x, y) {
+  #areStartCoordinatesOutOfBounds(x, y) {
     return x < 0 || y < 0 || x > BOARD_SIZE || y > BOARD_SIZE;
   }
 
