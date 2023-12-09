@@ -17,29 +17,26 @@ export class Gameboard {
 
   constructor() {}
 
-  place({ shipObj, isVertical, originX, originY }) {
+  place({ shipObj, isVertical, startX, startY }) {
     if (
-      this.#areStartCoordinatesOutOfBounds(originX, originY) ||
+      this.#areStartCoordinatesOutOfBounds(startX, startY) ||
       this.#areEndCoordinatesOutOfBounds({
         shipLength: shipObj.length,
         isVertical,
-        startX: originX,
-        startY: originY,
+        startX,
+        startY,
       }) ||
       this.#isFilledPath({
         pathLength: shipObj.length,
         isVertical,
-        startX: originX,
-        startY: originY,
+        startX,
+        startY,
       })
     ) {
       throw new Error("Given coordinates are out of bounds of the gameboard");
     }
 
-    const [startX, startY] = this.#convertBoardCoordsToArrayCoords(
-      originX,
-      originY
-    );
+    [startX, startY] = this.#convertBoardCoordsToArrayCoords(startX, startY);
 
     if (isVertical) {
       for (let currentY = 0; currentY < shipObj.length; currentY++) {
