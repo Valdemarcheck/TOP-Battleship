@@ -90,9 +90,17 @@ h1 {
 }
 
 .grid {
-  flex: 1;
-  width: 70%;
-  background-color: rgb(32, 32, 32);
+  width: min-content;
+  height: min-content;
+
+  display: grid;
+  grid-template-columns: repeat(10, 3.5rem);
+  grid-template-rows: repeat(10, 3.5rem);
+}
+
+.grid-cell {
+  --cell-color: #8d8d8d;
+  border: 1px solid var(--cell-color);
 }
 
 .nickname {
