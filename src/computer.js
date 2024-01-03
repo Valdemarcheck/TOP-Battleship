@@ -1,7 +1,8 @@
-const enemyBoard = { receiveAttack: function (x, y) {} };
+import { BOARD_SIZE } from "./constants";
+
+// const enemyBoard = { receiveAttack: function (x, y) {} };
 
 export function ComputerPlayer(computerBoard, enemyBoard) {
-  const BOARD_SIZE = 10;
   const unusedCoordinatesObj = (() => {
     const unusedCoordinatesObj = {};
     const yCoordinatesInOneColumn = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

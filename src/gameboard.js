@@ -1,3 +1,5 @@
+import BOARD_SIZE from "./constants";
+
 function getArrayOfSameValues(size, value) {
   const array = [];
   for (let i = 0; i < size; i++) {
@@ -8,7 +10,6 @@ function getArrayOfSameValues(size, value) {
   }
   return array;
 }
-const BOARD_SIZE = 10;
 
 export class Gameboard {
   hitCellsBoardArray = getArrayOfSameValues(BOARD_SIZE, false);
