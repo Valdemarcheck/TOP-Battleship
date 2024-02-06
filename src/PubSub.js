@@ -4,7 +4,6 @@ export const PubSub = (() => {
   function on(eventName, fn) {
     EVENTS[eventName] = EVENTS[eventName] || [];
     EVENTS[eventName].push(fn);
-    console.log(EVENTS);
   }
 
   function off(eventName, fn) {
@@ -13,10 +12,10 @@ export const PubSub = (() => {
         (currentFn) => currentFn != fn
       );
     }
-    console.log(EVENTS);
   }
 
   function emit(eventName, data) {
+    console.log(eventName + " EVENT WAS CALLED");
     if (EVENTS[eventName]) {
       EVENTS[eventName].forEach((fn) => {
         fn(data);
