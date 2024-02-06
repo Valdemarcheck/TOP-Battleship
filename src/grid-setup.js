@@ -1,6 +1,6 @@
 import { BOARD_SIZE } from "./constants";
 
-function fillGridWithCells(grid) {
+export default function fillGridWithCells(grid) {
   for (let i = 0; i < BOARD_SIZE; i++) {
     for (let j = 0; j < BOARD_SIZE; j++) {
       const cell = document.createElement("div");
@@ -9,8 +9,3 @@ function fillGridWithCells(grid) {
     }
   }
 }
-
-const [gridLeft, gridRight] = document.getElementsByClassName("grid");
-console.log(gridLeft, gridRight);
-fillGridWithCells(gridLeft);
-fillGridWithCells(gridRight);
