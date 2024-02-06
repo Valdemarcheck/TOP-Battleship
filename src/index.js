@@ -1,4 +1,5 @@
 import { PubSub } from "./PubSub";
+import "./dock-manager";
 import fillGridWithCells from "./grid-setup";
 const MAIN_ACTION_BUTTON_PRESET_NAMES = {
   nextPlacementStage: "Start placing ships",
@@ -7,7 +8,6 @@ const MAIN_ACTION_BUTTON_PRESET_NAMES = {
 const mainActionButton = document.querySelector(".main-action-button");
 mainActionButton.textContent =
   MAIN_ACTION_BUTTON_PRESET_NAMES.nextPlacementStage;
-const dock = document.querySelector(".dock");
 
 const [gridLeft, gridRight] = document.getElementsByClassName("grid");
 fillGridWithCells(gridLeft);
@@ -21,12 +21,9 @@ mainActionButton.addEventListener("click", () => {
     }
     case MAIN_ACTION_BUTTON_PRESET_NAMES.nextPlacementStage: {
       PubSub.emit("placementOfShipsHasStarted");
+      mainActionButton.textContent =
+        MAIN_ACTION_BUTTON_PRESET_NAMES.nextGameStage;
       break;
     }
   }
-});
-
-PubSub.on("placementOfShipsHasStarted", () => {
-  mainActionButton.textContent = MAIN_ACTION_BUTTON_PRESET_NAMES.nextGameStage;
-  dock.style.display = "flex";
 });

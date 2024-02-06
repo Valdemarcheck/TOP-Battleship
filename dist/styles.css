@@ -117,9 +117,17 @@ h1 {
 .dock {
   overflow-x: auto;
   background: #434343;
-  width: 100%;
+  max-width: 90vw;
   min-height: 12rem;
+  padding: 1rem;
 
   /* Controlled by JS */
   display: none;
+  gap: 1rem;
+}
+
+.dock-ship {
+  background-color: red;
+  height: 100%;
+  min-width: 200px;
 }
