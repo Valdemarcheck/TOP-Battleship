@@ -124,10 +124,10 @@ h1 {
   /* Controlled by JS */
   display: none;
   gap: 1rem;
+  align-items: center;
 }
 
 .dock-ship {
   background-color: red;
-  height: 100%;
-  min-width: 200px;
+  height: 50%;
 }
