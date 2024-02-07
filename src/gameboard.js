@@ -1,4 +1,4 @@
-import BOARD_SIZE from "./constants";
+const BOARD_SIZE = 10;
 
 function getArrayOfSameValues(size, value) {
   const array = [];

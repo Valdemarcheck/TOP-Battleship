@@ -1,4 +1,4 @@
-import { BOARD_SIZE } from "./constants";
+const BOARD_SIZE = 10;
 
 export default function fillGridWithCells(grid) {
   for (let i = 0; i < BOARD_SIZE; i++) {

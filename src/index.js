@@ -27,3 +27,10 @@ mainActionButton.addEventListener("click", () => {
     }
   }
 });
+
+PubSub.on("gameStarts", () => {
+  mainActionButton.style.display = "None";
+  gridLeft.childNodes.forEach((tile) => {
+    tile.classList.add("greyed-out");
+  });
+});
