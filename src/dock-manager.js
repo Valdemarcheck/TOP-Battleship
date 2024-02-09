@@ -1,12 +1,5 @@
 import { PubSub } from "./PubSub";
 
-const LENGTHS_AND_COUNTS_OF_SHIPS = {
-  1: 4,
-  2: 3,
-  3: 2,
-  4: 1,
-};
-
 function createShipImg(length) {
   const shipImg = document.createElement("img");
   shipImg.src = `./images/${length}ship.png`;
@@ -25,11 +18,16 @@ const dock = document.querySelector(".dock");
 PubSub.on("placementOfShipsHasStarted", () => {
   dock.style.display = "flex";
 
-  for (let [length, amount] of Object.entries(LENGTHS_AND_COUNTS_OF_SHIPS)) {
-    for (let i = 0; i < amount; i++) {
-      pushShipImgToDock(createShipImg(length));
-    }
-  }
+  pushShipImgToDock(createShipImg(4));
+  pushShipImgToDock(createShipImg(3));
+  pushShipImgToDock(createShipImg(3));
+  pushShipImgToDock(createShipImg(2));
+  pushShipImgToDock(createShipImg(2));
+  pushShipImgToDock(createShipImg(2));
+  pushShipImgToDock(createShipImg(1));
+  pushShipImgToDock(createShipImg(1));
+  pushShipImgToDock(createShipImg(1));
+  pushShipImgToDock(createShipImg(1));
 });
 
 PubSub.on("checkIfAllShipsWerePlaced", () => {
