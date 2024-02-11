@@ -1,16 +1,15 @@
 import { PubSub } from "./PubSub";
+import { ShipUI } from "./shipUI";
+const SHIPS = [];
 
-function createShipImg(length) {
-  const shipImg = document.createElement("img");
-  shipImg.src = `./images/${length}ship.png`;
-  shipImg.classList.add("dock-ship");
-  shipImg.classList.add("length-" + length);
-
-  return shipImg;
+function createShip(length) {
+  const ship = new ShipUI(document.createElement("div"), length);
+  SHIPS.push(ship);
+  return ship.shipElement;
 }
 
-function pushShipImgToDock(shipImg) {
-  dock.appendChild(shipImg);
+function pushShipToDock(shipElement) {
+  dock.appendChild(shipElement);
 }
 
 const dock = document.querySelector(".dock");
@@ -18,16 +17,16 @@ const dock = document.querySelector(".dock");
 PubSub.on("placementOfShipsHasStarted", () => {
   dock.style.display = "flex";
 
-  pushShipImgToDock(createShipImg(4));
-  pushShipImgToDock(createShipImg(3));
-  pushShipImgToDock(createShipImg(3));
-  pushShipImgToDock(createShipImg(2));
-  pushShipImgToDock(createShipImg(2));
-  pushShipImgToDock(createShipImg(2));
-  pushShipImgToDock(createShipImg(1));
-  pushShipImgToDock(createShipImg(1));
-  pushShipImgToDock(createShipImg(1));
-  pushShipImgToDock(createShipImg(1));
+  pushShipToDock(createShip(4));
+  pushShipToDock(createShip(3));
+  pushShipToDock(createShip(3));
+  pushShipToDock(createShip(2));
+  pushShipToDock(createShip(2));
+  pushShipToDock(createShip(2));
+  pushShipToDock(createShip(1));
+  pushShipToDock(createShip(1));
+  pushShipToDock(createShip(1));
+  pushShipToDock(createShip(1));
 });
 
 PubSub.on("checkIfAllShipsWerePlaced", () => {

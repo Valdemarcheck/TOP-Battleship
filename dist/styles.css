@@ -94,11 +94,11 @@ h1 {
   height: min-content;
 
   display: grid;
-  grid-template-columns: repeat(10, 3.5rem);
-  grid-template-rows: repeat(10, 3.5rem);
+  /* grid-template-columns: repeat(10, 50px);
+  grid-template-rows: repeat(10, 50px); */
 }
 
-.grid-cell {
+.tile {
   --cell-color: #8d8d8d;
   border: 1px solid var(--cell-color);
 }
@@ -129,7 +129,6 @@ h1 {
 
 .dock-ship {
   background-color: red;
-  height: 80px;
 }
 
 .greyed-out {

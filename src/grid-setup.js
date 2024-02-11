@@ -1,11 +1,19 @@
-const BOARD_SIZE = 10;
+import { TILE_SIZE_PX } from "./constants";
+import { TileUI } from "./tileUI";
+import { BOARD_SIZE } from "./constants";
 
-export default function fillGridWithCells(grid) {
-  for (let i = 0; i < BOARD_SIZE; i++) {
-    for (let j = 0; j < BOARD_SIZE; j++) {
-      const cell = document.createElement("div");
-      cell.classList.add("grid-cell");
-      grid.appendChild(cell);
+export function fillGridWithCells(grid) {
+  for (let y = 0; y < BOARD_SIZE; y++) {
+    for (let x = 0; x < BOARD_SIZE; x++) {
+      const tile = new TileUI(document.createElement("div"), x + 1, y + 1);
+      grid.appendChild(tile.tileElement);
     }
   }
+}
+
+export function setGridTileSize(grid) {
+  grid.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, ${
+    TILE_SIZE_PX + "px"
+  })`;
+  grid.style.gridTemplateRows = `repeat(${BOARD_SIZE}, ${TILE_SIZE_PX + "px"})`;
 }

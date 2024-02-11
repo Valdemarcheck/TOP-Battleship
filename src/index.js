@@ -1,6 +1,7 @@
 import { PubSub } from "./PubSub";
 import "./dock-manager";
-import fillGridWithCells from "./grid-setup";
+import { setGridTileSize, fillGridWithCells } from "./grid-setup";
+
 const MAIN_ACTION_BUTTON_PRESET_NAMES = {
   nextPlacementStage: "Start placing ships",
   nextGameStage: "Start game",
@@ -10,6 +11,8 @@ mainActionButton.textContent =
   MAIN_ACTION_BUTTON_PRESET_NAMES.nextPlacementStage;
 
 const [gridLeft, gridRight] = document.getElementsByClassName("grid");
+setGridTileSize(gridLeft);
+setGridTileSize(gridRight);
 fillGridWithCells(gridLeft);
 fillGridWithCells(gridRight);
 
