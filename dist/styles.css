@@ -129,7 +129,10 @@ h1 {
 }
 
 .dock-ship {
-  background-color: red;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid black;
 }
 
 .greyed-out {
@@ -138,4 +141,20 @@ h1 {
 
 .hoveredWithShip {
   background-color: grey;
+}
+
+.length-1 {
+  background-image: url("./images/1ship.png");
+}
+
+.length-2 {
+  background-image: url("./images/2ship.png");
+}
+
+.length-3 {
+  background-image: url("./images/3ship.png");
+}
+
+.length-4 {
+  background-image: url("./images/4ship.png");
 }
