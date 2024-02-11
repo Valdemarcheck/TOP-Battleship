@@ -135,3 +135,7 @@ h1 {
 .greyed-out {
   background-color: rgba(218, 218, 218, 0.61);
 }
+
+.hoveredWithShip {
+  background-color: grey;
+}

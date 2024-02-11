@@ -1,5 +1,6 @@
 import { PubSub } from "./PubSub";
 import "./shipUI";
+import "./tileUI";
 import "./dock-manager";
 import { setGridTileSize, fillGridWithCells } from "./grid-setup";
 
