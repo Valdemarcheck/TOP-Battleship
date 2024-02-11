@@ -1,5 +1,5 @@
 import { TILE_SIZE_PX } from "./constants";
-
+import { PubSub } from "./PubSub";
 export class ShipUI {
   static movableShip = null;
   offsetX = 0;
@@ -17,5 +17,41 @@ export class ShipUI {
     const rect = this.shipElement.getBoundingClientRect();
     this.startY = rect.top;
     this.startX = rect.left;
+
+    shipElement.addEventListener("mousedown", (e) => {
+      ShipUI.movableShip = this;
+
+      const rect = this.shipElement.getBoundingClientRect();
+      this.offsetY = e.clientY - rect.top;
+      this.offsetX = e.clientX - rect.left;
+      console.log(e.clientY, rect.top, this.offsetY);
+      this.shipElement.style.position = "absolute";
+    });
   }
 }
+
+function move(e, ship) {
+  ship.shipElement.style.top = e.pageY - ship.offsetY + "px";
+  ship.shipElement.style.left = e.pageX - ship.offsetX + "px";
+}
+
+function reset(ship) {
+  ship.shipElement.style.top = ShipUI.movableShip.startY + "px";
+  ship.shipElement.style.left = ShipUI.movableShip.startX + "px";
+  ship.shipElement.style.position = "static";
+}
+
+document.addEventListener("mousemove", (e) => {
+  if (ShipUI.movableShip) {
+    move(e, ShipUI.movableShip);
+    PubSub.emit("shipIsMoving", ShipUI.movableShip);
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  if (ShipUI.movableShip) {
+    PubSub.emit("noShipMovement", ShipUI.movableShip);
+    reset(ShipUI.movableShip);
+    ShipUI.movableShip = null;
+  }
+});
