@@ -1,26 +1,26 @@
 import { TILE_SIZE_PX } from "./constants";
 import { PubSub } from "./PubSub";
 
-function elementIsInside(inner, outer, length, isRotated, baseLength) {
-  const innerRect = inner.getBoundingClientRect();
-  const outerRect = outer.getBoundingClientRect();
-
+function shipIsOverTile(tile, ship, length, isRotated, baseLength) {
+  const tileRect = tile.getBoundingClientRect();
+  const shipRect = ship.getBoundingClientRect();
+  console.log(tile, ship);
   for (let i = 0; i < length; i++) {
-    const differenceTop = Math.abs(innerRect.top - outerRect.top);
-    const differenceLeft = Math.abs(innerRect.left - outerRect.left);
+    const differenceTop = Math.abs(tileRect.top - shipRect.top);
+    const differenceLeft = Math.abs(tileRect.left - shipRect.left);
     const differenceBottom = isRotated
-      ? Math.abs(innerRect.bottom - (outerRect.bottom - baseLength * i))
-      : Math.abs(innerRect.bottom - outerRect.bottom);
+      ? Math.abs(tileRect.bottom - (shipRect.bottom - baseLength * i))
+      : Math.abs(tileRect.bottom - shipRect.bottom);
     const differenceRight = isRotated
-      ? Math.abs(innerRect.right - outerRect.right)
-      : Math.abs(innerRect.right - (outerRect.right - baseLength * i));
+      ? Math.abs(tileRect.right - shipRect.right)
+      : Math.abs(tileRect.right - (shipRect.right - baseLength * i));
 
     if (
-      (differenceTop < innerRect.height / 2 ||
-        differenceLeft < innerRect.width / 2) &&
-      differenceBottom < innerRect.height / 2 &&
-      differenceRight < innerRect.width / 2 &&
-      differenceTop < innerRect.height / 2
+      (differenceTop < tileRect.height / 2 ||
+        differenceLeft < tileRect.width / 2) &&
+      differenceBottom < tileRect.height / 2 &&
+      differenceRight < tileRect.width / 2 &&
+      differenceTop < tileRect.height / 2
     ) {
       return true;
     }
@@ -40,7 +40,7 @@ export class TileUI {
 
     PubSub.on("shipIsMoving", (ship) => {
       if (
-        elementIsInside(
+        shipIsOverTile(
           this.tileElement,
           ship.shipElement,
           ship.length,
