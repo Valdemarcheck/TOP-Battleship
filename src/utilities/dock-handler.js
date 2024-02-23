@@ -1,10 +1,8 @@
 import { PubSub } from "../PubSub";
 import { ShipUI } from "../shipUI";
-import { SHIP_UI_ELEMENTS } from "../constants";
 
 function createShipUI(length) {
   const ship = new ShipUI(document.createElement("div"), length);
-  SHIP_UI_ELEMENTS.push(ship);
   return ship.shipElement;
 }
 

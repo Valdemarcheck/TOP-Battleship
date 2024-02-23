@@ -1,13 +1,20 @@
-import { TILE_SIZE_PX } from "./constants";
+import {
+  SHIP_PLACEMENT_ON_TILE_X_OFFSET,
+  SHIP_PLACEMENT_ON_TILE_Y_OFFSET,
+  TILE_SIZE_PX,
+} from "./constants";
 import { PubSub } from "./PubSub";
 import { SHIP_WIDTH_COEFFICIENT, SHIP_HEIGHT_COEFFICIENT } from "./constants";
+import { getTilesUnderShip } from "./tileUI";
 export class ShipUI {
   static movableShip = null;
+  static allShips = [];
   offsetX = 0;
   offsetY = 0;
   tilesPlaced = [];
 
   constructor(shipElement, length) {
+    ShipUI.allShips.push(this);
     this.length = length;
     this.shipElement = shipElement;
     this.shipElement.classList.add("dock-ship");
@@ -18,8 +25,8 @@ export class ShipUI {
       TILE_SIZE_PX + SHIP_HEIGHT_COEFFICIENT + "px";
 
     const rect = this.shipElement.getBoundingClientRect();
-    this.startY = rect.top;
-    this.startX = rect.left;
+    this.originY = rect.top;
+    this.originX = rect.left;
 
     shipElement.addEventListener("mousedown", (e) => {
       ShipUI.movableShip = this;
@@ -33,15 +40,27 @@ export class ShipUI {
   }
 }
 
+function setShipOriginToTile(shipUI, tileUI) {
+  const tileRect = tileUI.tileElement.getBoundingClientRect();
+  console.log(tileRect);
+  shipUI.originY =
+    tileRect.top +
+    document.documentElement.scrollTop +
+    SHIP_PLACEMENT_ON_TILE_Y_OFFSET;
+  shipUI.originX = tileRect.left + SHIP_PLACEMENT_ON_TILE_X_OFFSET;
+}
+
 function move(e, ship) {
   ship.shipElement.style.top = e.pageY - ship.offsetY + "px";
   ship.shipElement.style.left = e.pageX - ship.offsetX + "px";
 }
 
-function reset(ship) {
-  ship.shipElement.style.top = ShipUI.movableShip.startY + "px";
-  ship.shipElement.style.left = ShipUI.movableShip.startX + "px";
-  ship.shipElement.style.position = "static";
+function reset(ship, isShipOverAnyTiles) {
+  ship.shipElement.style.top = ShipUI.movableShip.originY + "px";
+  ship.shipElement.style.left = ShipUI.movableShip.originX + "px";
+  if (!isShipOverAnyTiles) {
+    ship.shipElement.style.position = "static";
+  }
 }
 
 document.addEventListener("mousemove", (e) => {
@@ -54,7 +73,14 @@ document.addEventListener("mousemove", (e) => {
 document.addEventListener("mouseup", () => {
   if (ShipUI.movableShip) {
     PubSub.emit("noShipMovement", ShipUI.movableShip);
-    reset(ShipUI.movableShip);
+    const tilesUnderShip = getTilesUnderShip(ShipUI.movableShip);
+    const isShipOverAnyTiles = tilesUnderShip.length > 0;
+
+    if (isShipOverAnyTiles) {
+      setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
+    }
+    reset(ShipUI.movableShip, isShipOverAnyTiles);
+    console.log(tilesUnderShip, ShipUI.movableShip);
     ShipUI.movableShip = null;
   }
 });

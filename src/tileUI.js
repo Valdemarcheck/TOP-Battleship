@@ -4,7 +4,7 @@ import { PubSub } from "./PubSub";
 function shipIsOverTile(tile, ship, length, isRotated, baseLength) {
   const tileRect = tile.getBoundingClientRect();
   const shipRect = ship.getBoundingClientRect();
-  console.log(tile, ship);
+
   for (let i = 0; i < length; i++) {
     const differenceTop = Math.abs(tileRect.top - shipRect.top);
     const differenceLeft = Math.abs(tileRect.left - shipRect.left);
@@ -29,9 +29,23 @@ function shipIsOverTile(tile, ship, length, isRotated, baseLength) {
   return false;
 }
 
+export function getTilesUnderShip(shipUI) {
+  return TileUI.allTiles.filter((tileUI) =>
+    shipIsOverTile(
+      tileUI.tileElement,
+      shipUI.shipElement,
+      shipUI.length,
+      false,
+      TILE_SIZE_PX
+    )
+  );
+}
+
 export class TileUI {
   filled = false;
+  static allTiles = [];
   constructor(tileElement, x, y) {
+    TileUI.allTiles.push(this);
     this.tileElement = tileElement;
     this.tileElement.classList.add("tile");
     this.tileElement.dataset.x = x;
