@@ -42,7 +42,6 @@ export class ShipUI {
 
 function setShipOriginToTile(shipUI, tileUI) {
   const tileRect = tileUI.tileElement.getBoundingClientRect();
-  console.log(tileRect);
   shipUI.originY =
     tileRect.top +
     document.documentElement.scrollTop +
@@ -78,9 +77,9 @@ document.addEventListener("mouseup", () => {
 
     if (isShipOverAnyTiles) {
       setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
+      ShipUI.movableShip.tilesPlaced = [...tilesUnderShip];
     }
     reset(ShipUI.movableShip, isShipOverAnyTiles);
-    console.log(tilesUnderShip, ShipUI.movableShip);
     ShipUI.movableShip = null;
   }
 });
