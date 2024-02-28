@@ -9,14 +9,20 @@ import { getTilesUnderShip } from "./tileUI";
 export class ShipUI {
   static movableShip = null;
   static allShips = [];
+  static usedIDs = [];
+  static ID_MAX_SIZE = 2;
   offsetX = 0;
   offsetY = 0;
   tilesPlaced = [];
 
   constructor(shipElement, length) {
     ShipUI.allShips.push(this);
+    const ID = ShipUI.#generateShipID();
+    this.id = ID;
     this.length = length;
+
     this.shipElement = shipElement;
+    this.shipElement.id = ID;
     this.shipElement.classList.add("dock-ship");
     this.shipElement.classList.add(`length-${length}`);
     this.shipElement.style.width =
@@ -37,6 +43,14 @@ export class ShipUI {
       console.log(e.clientY, rect.top, this.offsetY);
       this.shipElement.style.position = "absolute";
     });
+  }
+
+  static #generateShipID() {
+    let id = null;
+    do {
+      id = parseInt(Math.random() * 10 ** ShipUI.ID_MAX_SIZE);
+    } while (ShipUI.usedIDs.includes(id));
+    return id;
   }
 }
 

@@ -1,4 +1,4 @@
-import { Ship } from "../src/ship";
+import { Ship } from "../src/gameplay/ship";
 
 describe("Ship class", () => {
   test("Hit functionality works (1)", () => {

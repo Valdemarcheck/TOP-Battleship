@@ -1,4 +1,4 @@
-import { Gameboard } from "../src/gameboard";
+import { Gameboard } from "../src/gameplay/gameboard";
 
 function Ship(length) {
   this.length = length;

@@ -1,4 +1,4 @@
-import { Player } from "../src/player";
+import { Player } from "../src/gameplay/player";
 
 function getArrayOfSameValues(size, value) {
   const array = [];
