@@ -174,3 +174,43 @@ test("Passes mockup game session complex test", () => {
   board.receiveAttack(9, 5);
   expect(board.areAllShipsSunk).toBe(true);
 });
+
+test("isPlacementLegal correctly detects placement out of bounds", () => {
+  const board = new Gameboard();
+  const ship = new Ship(4);
+
+  // out of bounds at the front
+  expect(
+    board.isPlacementLegal({
+      shipObj: ship,
+      isVertical: false,
+      startX: -2,
+      startY: 1,
+    })
+  ).toBe(false);
+
+  // out of bounds from behind
+  expect(
+    board.isPlacementLegal({
+      shipObj: ship,
+      isVertical: false,
+      startX: 9,
+      startY: 1,
+    })
+  ).toBe(false);
+});
+
+test("isPlacementLegal correctly detects placements over other ships", () => {
+  const board = new Gameboard();
+  const ship1 = new Ship(3);
+  const ship2 = new Ship(4);
+  board.place({ shipObj: ship1, isVertical: false, startX: 1, startY: 1 });
+  expect(
+    board.isPlacementLegal({
+      shipObj: ship2,
+      isVertical: false,
+      startX: 2,
+      startY: 1,
+    })
+  ).toBe(false);
+});
