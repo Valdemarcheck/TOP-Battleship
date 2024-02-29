@@ -13,7 +13,7 @@ export class ShipUI {
   static ID_MAX_SIZE = 2;
   offsetX = 0;
   offsetY = 0;
-  tilesPlaced = [];
+  // tilesPlaced = [];
 
   constructor(shipElement, length) {
     ShipUI.allShips.push(this);
@@ -88,12 +88,33 @@ document.addEventListener("mouseup", () => {
     PubSub.emit("noShipMovement", ShipUI.movableShip);
     const tilesUnderShip = getTilesUnderShip(ShipUI.movableShip);
     const isShipOverAnyTiles = tilesUnderShip.length > 0;
+    const isShipOutOfBounds =
+      tilesUnderShip.length !== ShipUI.movableShip.length;
+    const isShipPositionLegal = isShipOverAnyTiles && !isShipOutOfBounds;
 
-    if (isShipOverAnyTiles) {
-      setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
-      ShipUI.movableShip.tilesPlaced = [...tilesUnderShip];
+    if (isShipPositionLegal) {
+      PubSub.emit("checkIfShipCrossesAnyShips", {
+        tilesUnderShip,
+        coordinates: {
+          x: tilesUnderShip[0].x,
+          y: tilesUnderShip[0].y,
+        },
+        shipUI: ShipUI.movableShip,
+      });
+    } else {
+      PubSub.emit("placementIsIllegal");
     }
-    reset(ShipUI.movableShip, isShipOverAnyTiles);
+
+    reset(ShipUI.movableShip, isShipPositionLegal);
     ShipUI.movableShip = null;
   }
+});
+
+PubSub.on("placementIsLegal", (tilesUnderShip) => {
+  setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
+  // ShipUI.movableShip.tilesPlaced = [...tilesUnderShip];
+});
+
+PubSub.on("placementIsIllegal", () => {
+  console.warn("Such ship placement is illegal");
 });

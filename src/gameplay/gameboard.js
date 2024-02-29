@@ -18,22 +18,26 @@ export class Gameboard {
 
   constructor() {}
 
-  place({ shipObj, isVertical, startX, startY }) {
-    if (
-      this.#areStartCoordinatesOutOfBounds(startX, startY) ||
-      this.#areEndCoordinatesOutOfBounds({
+  isPlacementLegal({ shipObj, isVertical, startX, startY }) {
+    return (
+      !this.#areStartCoordinatesOutOfBounds(startX, startY) &&
+      !this.#areEndCoordinatesOutOfBounds({
         shipLength: shipObj.length,
         isVertical,
         startX,
         startY,
-      }) ||
-      this.#isFilledPath({
+      }) &&
+      !this.#isFilledPath({
         pathLength: shipObj.length,
         isVertical,
         startX,
         startY,
       })
-    ) {
+    );
+  }
+
+  place({ shipObj, isVertical, startX, startY }) {
+    if (!this.isPlacementLegal({ shipObj, isVertical, startX, startY })) {
       throw new Error("Given coordinates are out of bounds of the gameboard");
     }
 

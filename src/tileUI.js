@@ -42,10 +42,11 @@ export function getTilesUnderShip(shipUI) {
 }
 
 export class TileUI {
-  filled = false;
   static allTiles = [];
   constructor(tileElement, x, y) {
     TileUI.allTiles.push(this);
+    this.x = x;
+    this.y = y;
     this.tileElement = tileElement;
     this.tileElement.classList.add("tile");
     this.tileElement.dataset.x = x;
