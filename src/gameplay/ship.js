@@ -1,9 +1,9 @@
 export class Ship {
   timesHit = 0;
 
-  constructor(length, uniqueID) {
+  constructor(length, id) {
     this.length = length;
-    this.uniqueID = uniqueID;
+    this.id = id;
   }
 
   hit() {

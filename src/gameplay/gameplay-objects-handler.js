@@ -2,6 +2,7 @@ import { Gameboard } from "./gameboard";
 import { Player } from "./player";
 import { ComputerPlayer } from "./computer";
 import { PubSub } from "../PubSub";
+import { Ship } from "./ship";
 
 const playerBoard = new Gameboard();
 const computerBoard = new Gameboard();
@@ -19,4 +20,18 @@ PubSub.on("checkIfShipCrossesAnyShips", (data) => {
   } else {
     PubSub.emit("placementIsIllegal");
   }
+});
+
+PubSub.on("shipMayBePlacedOnGameplayBoard", (placementData) => {
+  const gameplayShip = new Ship(
+    placementData.shipUI.length,
+    placementData.shipUI.id
+  );
+  playerBoard.place({
+    shipObj: gameplayShip,
+    isVertical: false,
+    startX: placementData.x,
+    startY: placementData.y,
+  });
+  console.log(playerBoard);
 });
