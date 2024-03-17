@@ -95,10 +95,8 @@ document.addEventListener("mouseup", () => {
     if (isShipPositionLegal) {
       PubSub.emit("checkIfShipCrossesAnyShips", {
         tilesUnderShip,
-        coordinates: {
-          x: tilesUnderShip[0].x,
-          y: tilesUnderShip[0].y,
-        },
+        x: tilesUnderShip[0].x,
+        y: tilesUnderShip[0].y,
         shipUI: ShipUI.movableShip,
       });
     } else {
@@ -112,12 +110,6 @@ document.addEventListener("mouseup", () => {
 
 PubSub.on("placementIsLegal", (tilesUnderShip) => {
   setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
-  PubSub.emit("shipMayBePlacedOnGameplayBoard", {
-    shipUI: ShipUI.movableShip,
-    x: tilesUnderShip[0].x,
-    y: tilesUnderShip[0].y,
-  });
-  // ShipUI.movableShip.tilesPlaced = [...tilesUnderShip];
 });
 
 PubSub.on("placementIsIllegal", () => {
