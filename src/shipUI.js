@@ -6,6 +6,7 @@ import {
 import { PubSub } from "./PubSub";
 import { SHIP_WIDTH_COEFFICIENT, SHIP_HEIGHT_COEFFICIENT } from "./constants";
 import { getTilesUnderShip } from "./tileUI";
+import { doesShipCrossAnyShips } from "./gameplay/gameplay-objects-handler";
 export class ShipUI {
   static movableShip = null;
   static allShips = [];
@@ -75,11 +76,12 @@ function move(e, ship) {
   ship.shipElement.style.left = e.pageX - ship.offsetX + "px";
 }
 
-function reset(ship, isShipOverAnyTiles) {
-  ship.shipElement.style.top = ShipUI.movableShip.originY + "px";
-  ship.shipElement.style.left = ShipUI.movableShip.originX + "px";
-  if (!isShipOverAnyTiles) {
+function reset(ship, isShipPositionLegal) {
+  if (!isShipPositionLegal) {
     ship.shipElement.style.position = "static";
+  } else {
+    ship.shipElement.style.top = ShipUI.movableShip.originY + "px";
+    ship.shipElement.style.left = ShipUI.movableShip.originX + "px";
   }
 }
 
@@ -94,21 +96,23 @@ document.addEventListener("mouseup", () => {
   if (ShipUI.movableShip) {
     PubSub.emit("noShipMovement", ShipUI.movableShip);
     const tilesUnderShip = getTilesUnderShip(ShipUI.movableShip);
+
     const isShipOverAnyTiles = tilesUnderShip.length > 0;
     const isShipOutOfBounds =
       tilesUnderShip.length !== ShipUI.movableShip.length;
-    const isShipPositionLegal = isShipOverAnyTiles && !isShipOutOfBounds;
+    const isShipPositionLegal =
+      isShipOverAnyTiles &&
+      !doesShipCrossAnyShips(tilesUnderShip) &&
+      !isShipOutOfBounds;
 
     if (ShipUI.movableShip.onBoard) {
       PubSub.emit("removeShipFromBoard", ShipUI.movableShip);
     }
     if (isShipPositionLegal) {
-      PubSub.emit("checkIfShipCrossesAnyShips", {
-        tilesUnderShip,
-        x: tilesUnderShip[0].x,
-        y: tilesUnderShip[0].y,
-        shipUI: ShipUI.movableShip,
-      });
+      setShipStartCoordinates(ShipUI.movableShip, tilesUnderShip);
+      PubSub.emit("placeShipUIOnBoard", ShipUI.movableShip);
+      setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
+      ShipUI.movableShip.onBoard = true;
     } else {
       console.warn("Such ship placement is illegal");
     }
@@ -116,10 +120,4 @@ document.addEventListener("mouseup", () => {
     reset(ShipUI.movableShip, isShipPositionLegal);
     ShipUI.movableShip = null;
   }
-});
-
-PubSub.on("placementIsLegal", (tilesUnderShip) => {
-  setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
-  setShipStartCoordinates(ShipUI.movableShip, tilesUnderShip);
-  ShipUI.movableShip.onBoard = true;
 });

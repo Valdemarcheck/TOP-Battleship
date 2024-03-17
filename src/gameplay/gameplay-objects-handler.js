@@ -21,32 +21,22 @@ function removeShipUIFromBoard(shipObj) {
   });
 }
 
-function placeShipUIOnBoard({ shipObj, x, y }) {
+export function doesShipCrossAnyShips(tilesUnderShip) {
+  return tilesUnderShip.some((tileUi) =>
+    playerBoard.isShipPlacedOnCoordinates(tileUi.x, tileUi.y)
+  );
+}
+
+function placeShipUIOnBoard(shipObj) {
   const gameplayShip = new Ship(shipObj.length, shipObj.id);
   playerBoard.place({
     shipObj: gameplayShip,
     isVertical: false,
-    startX: x,
-    startY: y,
+    startX: shipObj.startX,
+    startY: shipObj.startY,
   });
   console.log(playerBoard);
 }
 
-PubSub.on("checkIfShipCrossesAnyShips", (data) => {
-  if (
-    data.tilesUnderShip.every(
-      (tileUi) => !playerBoard.isShipPlacedOnCoordinates(tileUi.x, tileUi.y)
-    )
-  ) {
-    PubSub.emit("placementIsLegal", data.tilesUnderShip);
-    placeShipUIOnBoard({
-      shipObj: data.shipUI,
-      x: data.x,
-      y: data.y,
-    });
-  } else {
-    PubSub.emit("placementIsIllegal");
-  }
-});
-
+PubSub.on("placeShipUIOnBoard", placeShipUIOnBoard);
 PubSub.on("removeShipFromBoard", removeShipUIFromBoard);
