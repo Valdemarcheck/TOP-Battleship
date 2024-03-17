@@ -3,11 +3,11 @@ import { TileUI } from "../tileUI";
 import { BOARD_SIZE } from "../constants";
 import { PubSub } from "../PubSub";
 
-const [gridLeft, gridRight] = document.getElementsByClassName("grid");
-fillGridWithCells(gridLeft);
-fillGridWithCells(gridRight);
-setGridTileSize(gridLeft);
-setGridTileSize(gridRight);
+const [enemyGrid, playerGrid] = document.getElementsByClassName("grid");
+fillGridWithCells(enemyGrid);
+fillGridWithCells(playerGrid);
+setGridTileSize(enemyGrid);
+setGridTileSize(playerGrid);
 
 function fillGridWithCells(grid) {
   for (let y = 0; y < BOARD_SIZE; y++) {
@@ -25,5 +25,10 @@ function setGridTileSize(grid) {
   grid.style.gridTemplateRows = `repeat(${BOARD_SIZE}, ${TILE_SIZE_PX + "px"})`;
 }
 
+function greyOutEnemyGrid() {
+  enemyGrid.classList.add("greyed-out");
+}
+
 PubSub.on("fillGridWithCells", fillGridWithCells);
 PubSub.on("setGridTileSize", setGridTileSize);
+PubSub.on("placementOfShipsHasStarted", greyOutEnemyGrid);
