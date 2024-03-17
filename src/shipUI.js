@@ -57,6 +57,16 @@ export class ShipUI {
   }
 }
 
+function isShipPositionLegal(ShipUI, tilesUnderShip) {
+  const isShipOverAnyTiles = tilesUnderShip.length > 0;
+  const isShipOutOfBounds = tilesUnderShip.length !== ShipUI.movableShip.length;
+  return (
+    isShipOverAnyTiles &&
+    !doesShipCrossAnyShips(tilesUnderShip) &&
+    !isShipOutOfBounds
+  );
+}
+
 function setShipStartCoordinates(shipUI, tilesUnderShip) {
   shipUI.startX = tilesUnderShip[0].x;
   shipUI.startY = tilesUnderShip[0].y;
@@ -96,28 +106,23 @@ document.addEventListener("mouseup", () => {
   if (ShipUI.movableShip) {
     PubSub.emit("noShipMovement", ShipUI.movableShip);
     const tilesUnderShip = getTilesUnderShip(ShipUI.movableShip);
-
-    const isShipOverAnyTiles = tilesUnderShip.length > 0;
-    const isShipOutOfBounds =
-      tilesUnderShip.length !== ShipUI.movableShip.length;
-    const isShipPositionLegal =
-      isShipOverAnyTiles &&
-      !doesShipCrossAnyShips(tilesUnderShip) &&
-      !isShipOutOfBounds;
+    const mayBePlacedOnBoard = isShipPositionLegal(ShipUI, tilesUnderShip);
 
     if (ShipUI.movableShip.onBoard) {
       PubSub.emit("removeShipFromBoard", ShipUI.movableShip);
+      ShipUI.movableShip.onBoard = false;
     }
-    if (isShipPositionLegal) {
+    if (mayBePlacedOnBoard) {
       setShipStartCoordinates(ShipUI.movableShip, tilesUnderShip);
-      PubSub.emit("placeShipUIOnBoard", ShipUI.movableShip);
       setShipOriginToTile(ShipUI.movableShip, tilesUnderShip[0]);
       ShipUI.movableShip.onBoard = true;
+
+      PubSub.emit("placeShipUIOnBoard", ShipUI.movableShip);
     } else {
       console.warn("Such ship placement is illegal");
     }
 
-    reset(ShipUI.movableShip, isShipPositionLegal);
+    reset(ShipUI.movableShip, mayBePlacedOnBoard);
     ShipUI.movableShip = null;
   }
 });

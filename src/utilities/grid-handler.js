@@ -3,7 +3,7 @@ import { TileUI } from "../tileUI";
 import { BOARD_SIZE } from "../constants";
 import { PubSub } from "../PubSub";
 
-const [enemyGrid, playerGrid] = document.getElementsByClassName("grid");
+export const [enemyGrid, playerGrid] = document.getElementsByClassName("grid");
 fillGridWithCells(enemyGrid);
 fillGridWithCells(playerGrid);
 setGridTileSize(enemyGrid);

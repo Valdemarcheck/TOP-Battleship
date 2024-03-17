@@ -1,7 +1,13 @@
 import { TILE_SIZE_PX } from "./constants";
 import { PubSub } from "./PubSub";
+import { enemyGrid } from "./utilities/grid-handler";
+
+function tileBelongsToEnemyGrid(tile, enemyGrid) {
+  return tile.parentElement == enemyGrid;
+}
 
 function shipIsOverTile(tile, ship, length, isRotated, baseLength) {
+  if (tileBelongsToEnemyGrid(tile, enemyGrid)) return false;
   const tileRect = tile.getBoundingClientRect();
   const shipRect = ship.getBoundingClientRect();
 
