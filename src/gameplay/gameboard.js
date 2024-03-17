@@ -36,6 +36,23 @@ export class Gameboard {
     );
   }
 
+  remove({ id, isVertical, length, startX, startY }) {
+    const [actualStartX, actualStartY] = this.#convertBoardCoordsToArrayCoords(
+      startX,
+      startY
+    );
+    if (isVertical) {
+      for (let currentY = 0; currentY < length; currentY++) {
+        this.shipsOnBoardArray[actualStartY - currentY][actualStartX] = null;
+      }
+    } else {
+      for (let currentX = 0; currentX < length; currentX++) {
+        this.shipsOnBoardArray[actualStartY][actualStartX + currentX] = null;
+      }
+    }
+    this.#removeShipFromListOfPlacedShips(id);
+  }
+
   place({ shipObj, isVertical, startX, startY }) {
     if (!this.isPlacementLegal({ shipObj, isVertical, startX, startY })) {
       throw new Error("Given coordinates are out of bounds of the gameboard");
@@ -78,6 +95,10 @@ export class Gameboard {
     return this.listOfShips.every((shipObj) => {
       return shipObj.isSunk;
     });
+  }
+
+  #removeShipFromListOfPlacedShips(id) {
+    this.listOfShips = this.listOfShips.filter((ship) => ship.id != id);
   }
 
   #isHit(x, y) {

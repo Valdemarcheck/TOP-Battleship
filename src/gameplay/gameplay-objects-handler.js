@@ -10,6 +10,17 @@ const computerBoard = new Gameboard();
 const player = new Player(playerBoard, computerBoard);
 const computer = ComputerPlayer(computerBoard, playerBoard);
 
+function removeShipUIFromBoard(shipObj) {
+  console.log("Removal");
+  playerBoard.remove({
+    id: shipObj.id,
+    sVertical: shipObj.isVertical,
+    length: shipObj.length,
+    startX: shipObj.startX,
+    startY: shipObj.startY,
+  });
+}
+
 function placeShipUIOnBoard({ shipObj, x, y }) {
   const gameplayShip = new Ship(shipObj.length, shipObj.id);
   playerBoard.place({
@@ -37,3 +48,5 @@ PubSub.on("checkIfShipCrossesAnyShips", (data) => {
     PubSub.emit("placementIsIllegal");
   }
 });
+
+PubSub.on("removeShipFromBoard", removeShipUIFromBoard);
