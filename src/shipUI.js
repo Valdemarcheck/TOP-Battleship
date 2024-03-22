@@ -18,16 +18,20 @@ export class ShipUI {
   startX = null;
   startY = null;
 
-  constructor(shipElement, length) {
+  constructor(shipElement, length, isRotated) {
     ShipUI.allShips.push(this);
     const ID = ShipUI.#generateShipID();
     this.id = ID;
     this.length = length;
+    this.isRotated = isRotated;
 
     this.shipElement = shipElement;
     this.shipElement.id = ID;
     this.shipElement.classList.add("dock-ship");
     this.shipElement.classList.add(`length-${length}`);
+    if (isRotated) {
+      this.shipElement.classList.add("rotated");
+    }
     this.shipElement.style.width =
       length * TILE_SIZE_PX + SHIP_WIDTH_COEFFICIENT + "px";
     this.shipElement.style.height =

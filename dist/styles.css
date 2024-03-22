@@ -136,6 +136,9 @@ h1 {
   border: 1px solid black;
 }
 
+.rotated {
+}
+
 .greyed-out {
   background-color: rgba(218, 218, 218, 0.61);
 }

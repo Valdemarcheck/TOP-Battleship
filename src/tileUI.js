@@ -6,7 +6,7 @@ function tileBelongsToEnemyGrid(tile, enemyGrid) {
   return tile.parentElement == enemyGrid;
 }
 
-function shipIsOverTile(tile, ship, length, isRotated, baseLength) {
+function isShipOverTile(tile, ship, length, isRotated, baseLength) {
   if (tileBelongsToEnemyGrid(tile, enemyGrid)) return false;
   const tileRect = tile.getBoundingClientRect();
   const shipRect = ship.getBoundingClientRect();
@@ -37,11 +37,11 @@ function shipIsOverTile(tile, ship, length, isRotated, baseLength) {
 
 export function getTilesUnderShip(shipUI) {
   return TileUI.allTiles.filter((tileUI) =>
-    shipIsOverTile(
+    isShipOverTile(
       tileUI.tileElement,
       shipUI.shipElement,
       shipUI.length,
-      false,
+      shipUI.isRotated,
       TILE_SIZE_PX
     )
   );
@@ -61,11 +61,11 @@ export class TileUI {
 
     PubSub.on("shipIsMoving", (ship) => {
       if (
-        shipIsOverTile(
+        isShipOverTile(
           this.tileElement,
           ship.shipElement,
           ship.length,
-          false,
+          ship.isRotated,
           TILE_SIZE_PX
         )
       ) {

@@ -1,8 +1,8 @@
 import { PubSub } from "../PubSub";
 import { ShipUI } from "../shipUI";
 
-function createShipUI(length) {
-  const ship = new ShipUI(document.createElement("div"), length);
+function createShipUI(length, rotated) {
+  const ship = new ShipUI(document.createElement("div"), length, rotated);
   return ship.shipElement;
 }
 
@@ -15,16 +15,16 @@ const dock = document.querySelector(".dock");
 PubSub.on("placementOfShipsHasStarted", () => {
   dock.style.display = "flex";
 
-  pushShipToDock(createShipUI(4));
-  pushShipToDock(createShipUI(3));
-  pushShipToDock(createShipUI(3));
-  pushShipToDock(createShipUI(2));
-  pushShipToDock(createShipUI(2));
-  pushShipToDock(createShipUI(2));
-  pushShipToDock(createShipUI(1));
-  pushShipToDock(createShipUI(1));
-  pushShipToDock(createShipUI(1));
-  pushShipToDock(createShipUI(1));
+  pushShipToDock(createShipUI(4, true));
+  pushShipToDock(createShipUI(3, false));
+  pushShipToDock(createShipUI(3, false));
+  pushShipToDock(createShipUI(2, false));
+  pushShipToDock(createShipUI(2, false));
+  pushShipToDock(createShipUI(2, false));
+  pushShipToDock(createShipUI(1, false));
+  pushShipToDock(createShipUI(1, false));
+  pushShipToDock(createShipUI(1, false));
+  pushShipToDock(createShipUI(1, false));
 });
 
 PubSub.on("checkIfAllShipsWerePlaced", () => {
