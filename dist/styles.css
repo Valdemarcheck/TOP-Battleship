@@ -116,21 +116,24 @@ h1 {
 
 .dock {
   background: #434343;
+  min-width: 70vw;
   max-width: 90vw;
   min-height: 12rem;
   padding: 1rem;
 
+  overflow-x: auto;
+  gap: 1rem;
+  /* justify-content: center; */
+  align-items: center;
+
   /* Controlled by JS */
   display: none;
-  gap: 1rem;
-  align-items: center;
 }
 
 .dock-ship {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
 }
 
 .rotated .ship-image {

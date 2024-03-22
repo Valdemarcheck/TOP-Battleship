@@ -1,7 +1,52 @@
-import { TILE_SIZE_PX } from "./constants";
+import { TILE_SIZE_PX, PRESSED_MOUSE_BUTTON } from "./constants";
 import { PubSub } from "./PubSub";
 import { getTilesUnderShip } from "./tileUI";
 import { doesShipCrossAnyShips } from "./gameplay/gameplay-objects-handler";
+
+function rotateShip() {
+  if (!this.isRotated) {
+    this.shipElement.style.height = TILE_SIZE_PX * this.length + "px";
+    this.shipElement.style.width = TILE_SIZE_PX + "px";
+  } else {
+    this.shipElement.style.height = TILE_SIZE_PX + "px";
+    this.shipElement.style.width = TILE_SIZE_PX * this.length + "px";
+  }
+  this.shipElement.classList.toggle("rotated");
+  this.isRotated = !this.isRotated;
+  console.log(this.isRotated);
+}
+
+function prepareShipForDragAndDrop(e) {
+  const rect = this.shipElement.getBoundingClientRect();
+  this.offsetY = e.clientY - rect.top;
+  this.offsetX = e.clientX - rect.left;
+  this.shipElement.style.position = "absolute";
+}
+
+function setupShipElement(shipElement, ID, length, isRotated) {
+  shipElement.id = ID;
+  shipElement.classList.add("dock-ship");
+  if (isRotated) {
+    shipElement.classList.add("rotated");
+    shipElement.style.width = TILE_SIZE_PX + "px";
+    shipElement.style.height = length * TILE_SIZE_PX + "px";
+  } else {
+    shipElement.style.width = length * TILE_SIZE_PX + "px";
+    shipElement.style.height = TILE_SIZE_PX + "px";
+  }
+  return shipElement;
+}
+
+function setupShipImage(shipElement, length) {
+  const shipImage = new Image();
+  shipImage.style.width = length * TILE_SIZE_PX + "px";
+  shipImage.style.height = TILE_SIZE_PX + "px";
+  shipImage.classList.add("ship-image");
+  shipImage.draggable = false;
+  shipImage.src = `images/${length}ship.png`;
+  shipElement.append(shipImage);
+}
+
 export class ShipUI {
   static movableShip = null;
   static allShips = [];
@@ -20,38 +65,20 @@ export class ShipUI {
     this.length = length;
     this.isRotated = isRotated;
 
-    this.shipElement = shipElement;
-    this.shipElement.id = ID;
-    this.shipElement.classList.add("dock-ship");
-    if (isRotated) {
-      this.shipElement.classList.add("rotated");
-      this.shipElement.style.width = TILE_SIZE_PX + "px";
-      this.shipElement.style.height = length * TILE_SIZE_PX + "px";
-    } else {
-      this.shipElement.style.width = length * TILE_SIZE_PX + "px";
-      this.shipElement.style.height = TILE_SIZE_PX + "px";
-    }
-
-    const shipImage = new Image();
-    shipImage.style.width = length * TILE_SIZE_PX + "px";
-    shipImage.style.height = TILE_SIZE_PX + "px";
-    shipImage.classList.add("ship-image");
-    shipImage.draggable = false;
-    shipImage.src = `images/${length}ship.png`;
-    this.shipElement.append(shipImage);
-
-    const rect = this.shipElement.getBoundingClientRect();
-    this.originY = rect.top;
-    this.originX = rect.left;
+    this.shipElement = setupShipElement(shipElement, ID, length, isRotated);
+    setupShipImage(this.shipElement, length);
 
     shipElement.addEventListener("mousedown", (e) => {
-      ShipUI.movableShip = this;
+      switch (e.button) {
+        case PRESSED_MOUSE_BUTTON.LEFT_CLICK:
+          ShipUI.movableShip = this;
+          prepareShipForDragAndDrop.call(this, e);
+          break;
 
-      const rect = this.shipElement.getBoundingClientRect();
-      this.offsetY = e.clientY - rect.top;
-      this.offsetX = e.clientX - rect.left;
-      console.log(e.clientY, rect.top, this.offsetY);
-      this.shipElement.style.position = "absolute";
+        case PRESSED_MOUSE_BUTTON.MIDDLE_CLICK:
+          if (this.length > 1) rotateShip.call(this);
+          break;
+      }
     });
   }
 
