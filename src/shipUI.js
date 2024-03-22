@@ -23,12 +23,22 @@ export class ShipUI {
     this.shipElement = shipElement;
     this.shipElement.id = ID;
     this.shipElement.classList.add("dock-ship");
-    this.shipElement.classList.add(`length-${length}`);
     if (isRotated) {
       this.shipElement.classList.add("rotated");
+      this.shipElement.style.width = TILE_SIZE_PX + "px";
+      this.shipElement.style.height = length * TILE_SIZE_PX + "px";
+    } else {
+      this.shipElement.style.width = length * TILE_SIZE_PX + "px";
+      this.shipElement.style.height = TILE_SIZE_PX + "px";
     }
-    this.shipElement.style.width = length * TILE_SIZE_PX + "px";
-    this.shipElement.style.height = TILE_SIZE_PX + "px";
+
+    const shipImage = new Image();
+    shipImage.style.width = length * TILE_SIZE_PX + "px";
+    shipImage.style.height = TILE_SIZE_PX + "px";
+    shipImage.classList.add("ship-image");
+    shipImage.draggable = false;
+    shipImage.src = `images/${length}ship.png`;
+    this.shipElement.append(shipImage);
 
     const rect = this.shipElement.getBoundingClientRect();
     this.originY = rect.top;
@@ -82,7 +92,7 @@ function move(e, ship) {
 
 function reset(ship, isShipPositionLegal) {
   if (!isShipPositionLegal) {
-    ship.shipElement.style.position = "static";
+    ship.shipElement.style.position = "relative";
   } else {
     ship.shipElement.style.top = ShipUI.movableShip.originY + "px";
     ship.shipElement.style.left = ShipUI.movableShip.originX + "px";

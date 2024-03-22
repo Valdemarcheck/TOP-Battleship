@@ -15,7 +15,7 @@ const dock = document.querySelector(".dock");
 PubSub.on("placementOfShipsHasStarted", () => {
   dock.style.display = "flex";
 
-  pushShipToDock(createShipUI(4, true));
+  pushShipToDock(createShipUI(4, false));
   pushShipToDock(createShipUI(3, false));
   pushShipToDock(createShipUI(3, false));
   pushShipToDock(createShipUI(2, false));

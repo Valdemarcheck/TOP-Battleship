@@ -96,8 +96,6 @@ h1 {
   height: min-content;
 
   display: grid;
-  /* grid-template-columns: repeat(10, 50px);
-  grid-template-rows: repeat(10, 50px); */
 }
 
 .tile {
@@ -117,7 +115,6 @@ h1 {
 }
 
 .dock {
-  overflow-x: auto;
   background: #434343;
   max-width: 90vw;
   min-height: 12rem;
@@ -130,13 +127,14 @@ h1 {
 }
 
 .dock-ship {
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid black;
 }
 
-.rotated {
+.rotated .ship-image {
+  transform: rotate(90deg);
 }
 
 .greyed-out {
@@ -145,20 +143,4 @@ h1 {
 
 .hoveredWithShip {
   background-color: grey;
-}
-
-.length-1 {
-  background-image: url("./images/1ship.png");
-}
-
-.length-2 {
-  background-image: url("./images/2ship.png");
-}
-
-.length-3 {
-  background-image: url("./images/3ship.png");
-}
-
-.length-4 {
-  background-image: url("./images/4ship.png");
 }
