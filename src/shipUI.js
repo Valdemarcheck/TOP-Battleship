@@ -1,10 +1,5 @@
-import {
-  SHIP_PLACEMENT_ON_TILE_X_OFFSET,
-  SHIP_PLACEMENT_ON_TILE_Y_OFFSET,
-  TILE_SIZE_PX,
-} from "./constants";
+import { TILE_SIZE_PX } from "./constants";
 import { PubSub } from "./PubSub";
-import { SHIP_WIDTH_COEFFICIENT, SHIP_HEIGHT_COEFFICIENT } from "./constants";
 import { getTilesUnderShip } from "./tileUI";
 import { doesShipCrossAnyShips } from "./gameplay/gameplay-objects-handler";
 export class ShipUI {
@@ -32,10 +27,8 @@ export class ShipUI {
     if (isRotated) {
       this.shipElement.classList.add("rotated");
     }
-    this.shipElement.style.width =
-      length * TILE_SIZE_PX + SHIP_WIDTH_COEFFICIENT + "px";
-    this.shipElement.style.height =
-      TILE_SIZE_PX + SHIP_HEIGHT_COEFFICIENT + "px";
+    this.shipElement.style.width = length * TILE_SIZE_PX + "px";
+    this.shipElement.style.height = TILE_SIZE_PX + "px";
 
     const rect = this.shipElement.getBoundingClientRect();
     this.originY = rect.top;
@@ -78,11 +71,8 @@ function setShipStartCoordinates(shipUI, tilesUnderShip) {
 
 function setShipOriginToTile(shipUI, tileUI) {
   const tileRect = tileUI.tileElement.getBoundingClientRect();
-  shipUI.originY =
-    tileRect.top +
-    document.documentElement.scrollTop +
-    SHIP_PLACEMENT_ON_TILE_Y_OFFSET;
-  shipUI.originX = tileRect.left + SHIP_PLACEMENT_ON_TILE_X_OFFSET;
+  shipUI.originX = tileRect.left + window.scrollX;
+  shipUI.originY = tileRect.top + window.scrollY;
 }
 
 function move(e, ship) {

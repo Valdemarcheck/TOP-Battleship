@@ -1,4 +1,4 @@
-import { TILE_SIZE_PX } from "./constants";
+import { MAX_VERTICAL, MAX_HORIZONTAL, TILE_SIZE_PX } from "./constants";
 import { PubSub } from "./PubSub";
 import { enemyGrid } from "./utilities/grid-handler";
 
@@ -6,44 +6,56 @@ function tileBelongsToEnemyGrid(tile, enemyGrid) {
   return tile.parentElement == enemyGrid;
 }
 
-function isShipOverTile(tile, ship, length, isRotated, baseLength) {
-  if (tileBelongsToEnemyGrid(tile, enemyGrid)) return false;
-  const tileRect = tile.getBoundingClientRect();
-  const shipRect = ship.getBoundingClientRect();
-
-  for (let i = 0; i < length; i++) {
-    const differenceTop = Math.abs(tileRect.top - shipRect.top);
-    const differenceLeft = Math.abs(tileRect.left - shipRect.left);
-    const differenceBottom = isRotated
-      ? Math.abs(tileRect.bottom - (shipRect.bottom - baseLength * i))
-      : Math.abs(tileRect.bottom - shipRect.bottom);
-    const differenceRight = isRotated
-      ? Math.abs(tileRect.right - shipRect.right)
-      : Math.abs(tileRect.right - (shipRect.right - baseLength * i));
-
-    if (
-      (differenceTop < tileRect.height / 2 ||
-        differenceLeft < tileRect.width / 2) &&
-      differenceBottom < tileRect.height / 2 &&
-      differenceRight < tileRect.width / 2 &&
-      differenceTop < tileRect.height / 2
-    ) {
-      return true;
-    }
-  }
-
-  return false;
+function getElementCoords(element) {
+  return [
+    element.left + window.scrollX,
+    element.top + window.scrollY,
+    element.right + window.scrollX,
+    element.bottom + window.scrollY,
+  ];
 }
 
+function getDifferencesInCoordsBetweenTileAndShip(tileRect, shipRect) {
+  const [tileLeft, tileTop, tileRight, tileBottom] = getElementCoords(tileRect);
+  const [shipLeft, shipTop, shipRight, shipBottom] = getElementCoords(shipRect);
+  return [
+    shipLeft - tileLeft,
+    shipTop - tileTop,
+    tileRight - shipRight,
+    tileBottom - shipBottom,
+  ];
+}
+
+function isShipInsideByHorizontal(differenceLeft, differenceRight) {
+  return (
+    (differenceLeft < MAX_HORIZONTAL && differenceRight <= 0) ||
+    (differenceRight < MAX_HORIZONTAL && differenceLeft <= 0)
+  );
+}
+
+function isShipInsideByVertical(differenceTop, differenceBottom) {
+  return (
+    (differenceTop < MAX_VERTICAL && differenceBottom <= 0) ||
+    (differenceBottom < MAX_VERTICAL && differenceTop <= 0)
+  );
+}
+
+function isShipOverTile(tile, ship) {
+  if (tileBelongsToEnemyGrid(tile, enemyGrid)) return false;
+  const shipRect = ship.getBoundingClientRect();
+  const tileRect = tile.getBoundingClientRect();
+
+  const [differenceLeft, differenceTop, differenceRight, differenceBottom] =
+    getDifferencesInCoordsBetweenTileAndShip(tileRect, shipRect);
+
+  return (
+    isShipInsideByHorizontal(differenceLeft, differenceRight) &&
+    isShipInsideByVertical(differenceTop, differenceBottom)
+  );
+}
 export function getTilesUnderShip(shipUI) {
   return TileUI.allTiles.filter((tileUI) =>
-    isShipOverTile(
-      tileUI.tileElement,
-      shipUI.shipElement,
-      shipUI.length,
-      shipUI.isRotated,
-      TILE_SIZE_PX
-    )
+    isShipOverTile(tileUI.tileElement, shipUI.shipElement)
   );
 }
 
@@ -60,15 +72,7 @@ export class TileUI {
     this.tileElement.width = TILE_SIZE_PX + "px";
 
     PubSub.on("shipIsMoving", (ship) => {
-      if (
-        isShipOverTile(
-          this.tileElement,
-          ship.shipElement,
-          ship.length,
-          ship.isRotated,
-          TILE_SIZE_PX
-        )
-      ) {
+      if (isShipOverTile(this.tileElement, ship.shipElement)) {
         this.tileElement.classList.add("hoveredWithShip");
       } else {
         this.tileElement.classList.remove("hoveredWithShip");
