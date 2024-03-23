@@ -17,6 +17,10 @@ body {
   display: flex;
 }
 
+img {
+  -webkit-user-drag: none;
+}
+
 .sidebar {
   height: 100%;
   padding: 1.4rem 0.7rem;
