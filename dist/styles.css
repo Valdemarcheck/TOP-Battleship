@@ -147,3 +147,19 @@ h1 {
 .hoveredWithShip {
   background-color: grey;
 }
+
+.middle-mouse-hint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+}
+
+.hint img {
+  height: 6rem;
+  padding: 0 0.5rem;
+}
+
+.hidden {
+  display: none;
+}
