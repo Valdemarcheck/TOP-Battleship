@@ -2,7 +2,7 @@ import { PubSub } from "../PubSub";
 import { ShipUI } from "../shipUI";
 
 function createShipUI(length) {
-  const ship = new ShipUI(document.createElement("div"), length);
+  const ship = new ShipUI(length);
   return ship.shipElement;
 }
 

@@ -15,7 +15,7 @@ export class ShipUI {
   startX = null;
   startY = null;
 
-  constructor(shipElement, length) {
+  constructor(length) {
     ShipUI.allShips.push(this);
     this.id = ShipUI.#generateShipID();
     this.length = length;
