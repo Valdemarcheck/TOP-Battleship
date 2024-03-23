@@ -167,3 +167,35 @@ h1 {
 .hidden {
   display: none;
 }
+
+.not-rotatable-hint {
+  position: relative;
+  animation: not-rotatable-hint 0.1s ease-in-out infinite both;
+}
+
+.general-text-hint {
+  position: absolute;
+  background-color: rgb(255, 165, 165);
+  padding: 0.5rem;
+  font-style: italic;
+  font-size: 1.5rem;
+  max-width: 200px;
+  transition: opacity 1s ease-out;
+  opacity: 1;
+}
+
+.general-text-hint.hidden {
+  opacity: 0;
+}
+
+@keyframes not-rotatable-hint {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-5px, 0);
+  }
+  100% {
+    transform: translate(5px, 0);
+  }
+}

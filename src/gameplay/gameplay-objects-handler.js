@@ -39,7 +39,7 @@ function placeShipUIOnBoard(shipUI) {
   console.log(playerBoard);
 }
 
-function attemptToRotateShipUI(shipUI) {
+function attemptToRotateShipUI({ e, shipUI }) {
   const tilesThatShipWillTake = getTilesForRotation(
     shipUI.startX,
     shipUI.startY,
@@ -52,7 +52,7 @@ function attemptToRotateShipUI(shipUI) {
     PubSub.emit("shipMayBeRotated", shipUI);
     placeShipUIOnBoard(shipUI);
   } else {
-    console.log("Yes");
+    PubSub.emit("tellPlayerShipWillCoverAnotherOneIfRotated", { shipUI, e });
   }
 }
 

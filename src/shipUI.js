@@ -1,4 +1,8 @@
-import { TILE_SIZE_PX, PRESSED_MOUSE_BUTTON } from "./constants";
+import {
+  TILE_SIZE_PX,
+  PRESSED_MOUSE_BUTTON,
+  CANNOT_ROTATE_SHIP_HINT_DURATIONS_MS,
+} from "./constants";
 import { PubSub } from "./PubSub";
 import { getTilesUnderShip } from "./tileUI";
 import { doesShipCrossAnyShips } from "./gameplay/gameplay-objects-handler";
@@ -43,17 +47,17 @@ export class ShipUI {
           break;
 
         case PRESSED_MOUSE_BUTTON.MIDDLE_CLICK:
-          this.#attemptToRotateShip();
+          this.#attemptToRotateShip(e);
           break;
       }
     });
   }
 
-  #attemptToRotateShip() {
+  #attemptToRotateShip(e) {
     if (!this.onBoard) {
       if (this.length > 1) rotateShip(this);
     } else {
-      PubSub.emit("userWantsToRotateShipOnBoard", this);
+      PubSub.emit("userWantsToRotateShipOnBoard", { e: e, shipUI: this });
     }
   }
 
@@ -166,4 +170,11 @@ document.addEventListener("mouseup", () => {
 
 PubSub.on("shipMayBeRotated", (shipUI) => {
   rotateShip(shipUI);
+});
+
+PubSub.on("tellPlayerShipWillCoverAnotherOneIfRotated", ({ shipUI }) => {
+  shipUI.shipElement.classList.add("not-rotatable-hint");
+  setTimeout(() => {
+    shipUI.shipElement.classList.remove("not-rotatable-hint");
+  }, CANNOT_ROTATE_SHIP_HINT_DURATIONS_MS);
 });
