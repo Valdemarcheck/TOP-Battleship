@@ -3,83 +3,81 @@ import { PubSub } from "./PubSub";
 import { getTilesUnderShip } from "./tileUI";
 import { doesShipCrossAnyShips } from "./gameplay/gameplay-objects-handler";
 
-function rotateShip() {
-  if (!this.isRotated) {
-    this.shipElement.style.height = TILE_SIZE_PX * this.length + "px";
-    this.shipElement.style.width = TILE_SIZE_PX + "px";
-  } else {
-    this.shipElement.style.height = TILE_SIZE_PX + "px";
-    this.shipElement.style.width = TILE_SIZE_PX * this.length + "px";
-  }
-  this.shipElement.classList.toggle("rotated");
-  this.isRotated = !this.isRotated;
-  console.log(this.isRotated);
-}
-
-function prepareShipForDragAndDrop(e) {
-  const rect = this.shipElement.getBoundingClientRect();
-  this.offsetY = e.clientY - rect.top;
-  this.offsetX = e.clientX - rect.left;
-  this.shipElement.style.position = "absolute";
-}
-
-function setupShipElement(shipElement, ID, length, isRotated) {
-  shipElement.id = ID;
-  shipElement.classList.add("dock-ship");
-  if (isRotated) {
-    shipElement.classList.add("rotated");
-    shipElement.style.width = TILE_SIZE_PX + "px";
-    shipElement.style.height = length * TILE_SIZE_PX + "px";
-  } else {
-    shipElement.style.width = length * TILE_SIZE_PX + "px";
-    shipElement.style.height = TILE_SIZE_PX + "px";
-  }
-  return shipElement;
-}
-
-function setupShipImage(shipElement, length) {
-  const shipImage = new Image();
-  shipImage.style.width = length * TILE_SIZE_PX + "px";
-  shipImage.style.height = TILE_SIZE_PX + "px";
-  shipImage.classList.add("ship-image");
-  shipImage.draggable = false;
-  shipImage.src = `images/${length}ship.png`;
-  shipElement.append(shipImage);
-}
-
 export class ShipUI {
   static movableShip = null;
   static allShips = [];
   static usedIDs = [];
   static ID_MAX_SIZE = 2;
+  isRotated = false;
   onBoard = false;
   offsetX = 0;
   offsetY = 0;
   startX = null;
   startY = null;
 
-  constructor(shipElement, length, isRotated) {
+  constructor(shipElement, length) {
     ShipUI.allShips.push(this);
-    const ID = ShipUI.#generateShipID();
-    this.id = ID;
+    this.id = ShipUI.#generateShipID();
     this.length = length;
-    this.isRotated = isRotated;
 
-    this.shipElement = setupShipElement(shipElement, ID, length, isRotated);
-    setupShipImage(this.shipElement, length);
+    this.#setupShipElement();
+    this.#setupShipImage();
 
-    shipElement.addEventListener("mousedown", (e) => {
+    this.shipElement.addEventListener("mousedown", (e) => {
       switch (e.button) {
         case PRESSED_MOUSE_BUTTON.LEFT_CLICK:
           ShipUI.movableShip = this;
-          prepareShipForDragAndDrop.call(this, e);
+          this.#prepareShipForDragAndDrop(e);
           break;
 
         case PRESSED_MOUSE_BUTTON.MIDDLE_CLICK:
-          if (this.length > 1) rotateShip.call(this);
+          if (this.length > 1) this.#rotateShip();
           break;
       }
     });
+  }
+
+  #setupShipImage() {
+    const shipImage = new Image();
+    shipImage.style.width = this.length * TILE_SIZE_PX + "px";
+    shipImage.style.height = TILE_SIZE_PX + "px";
+    shipImage.classList.add("ship-image");
+    shipImage.draggable = false;
+    shipImage.src = `images/${this.length}ship.png`;
+    this.shipElement.append(shipImage);
+  }
+
+  #prepareShipForDragAndDrop(e) {
+    const rect = this.shipElement.getBoundingClientRect();
+    this.offsetY = e.clientY - rect.top;
+    this.offsetX = e.clientX - rect.left;
+    this.shipElement.style.position = "absolute";
+  }
+
+  #setupShipElement() {
+    this.shipElement = document.createElement("div");
+    this.shipElement.id = this.id;
+    this.shipElement.classList.add("dock-ship");
+    if (this.isRotated) {
+      this.shipElement.classList.add("rotated");
+      this.shipElement.style.width = TILE_SIZE_PX + "px";
+      this.shipElement.style.height = this.length * TILE_SIZE_PX + "px";
+    } else {
+      this.shipElement.style.width = this.length * TILE_SIZE_PX + "px";
+      this.shipElement.style.height = TILE_SIZE_PX + "px";
+    }
+  }
+
+  #rotateShip() {
+    if (!this.isRotated) {
+      this.shipElement.style.height = TILE_SIZE_PX * this.length + "px";
+      this.shipElement.style.width = TILE_SIZE_PX + "px";
+    } else {
+      this.shipElement.style.height = TILE_SIZE_PX + "px";
+      this.shipElement.style.width = TILE_SIZE_PX * this.length + "px";
+    }
+    this.shipElement.classList.toggle("rotated");
+    this.isRotated = !this.isRotated;
   }
 
   static #generateShipID() {
