@@ -39,18 +39,18 @@ function Board() {
       this.shipCells[y - 1][x - 1].hit();
     }
   };
-  this.place = function ({ shipObj, isVertical, originX, originY }) {
-    if (shipObj.length === 1) {
-      this.shipCells[originY - 1][originX - 1] = shipObj;
+  this.place = function ({ shipUI, isVertical, originX, originY }) {
+    if (shipUI.length === 1) {
+      this.shipCells[originY - 1][originX - 1] = shipUI;
       return;
     }
     if (isVertical) {
-      for (let i = 0; i < shipObj.length; i++) {
-        this.shipCells[originY - i - 1][originX - 1] = shipObj;
+      for (let i = 0; i < shipUI.length; i++) {
+        this.shipCells[originY - i - 1][originX - 1] = shipUI;
       }
     } else {
-      for (let i = 0; i < shipObj.length; i++) {
-        this.shipCells[originY - 1][originX + i - 1] = shipObj;
+      for (let i = 0; i < shipUI.length; i++) {
+        this.shipCells[originY - 1][originX + i - 1] = shipUI;
       }
     }
   };
@@ -91,7 +91,7 @@ describe("Player factory function", () => {
     const enemyBoard = new Board();
     const enemyShip = new Ship(3);
     enemyBoard.place({
-      shipObj: enemyShip,
+      shipUI: enemyShip,
       isVertical: true,
       originX: 5,
       originY: 5,

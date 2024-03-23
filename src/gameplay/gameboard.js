@@ -18,17 +18,17 @@ export class Gameboard {
 
   constructor() {}
 
-  isPlacementLegal({ shipObj, isVertical, startX, startY }) {
+  isPlacementLegal({ shipUI, isVertical, startX, startY }) {
     return (
       !this.#areStartCoordinatesOutOfBounds(startX, startY) &&
       !this.#areEndCoordinatesOutOfBounds({
-        shipLength: shipObj.length,
+        shipLength: shipUI.length,
         isVertical,
         startX,
         startY,
       }) &&
       !this.#isFilledPath({
-        pathLength: shipObj.length,
+        pathLength: shipUI.length,
         isVertical,
         startX,
         startY,
@@ -37,40 +37,46 @@ export class Gameboard {
   }
 
   remove({ id, isVertical, length, startX, startY }) {
-    const [actualStartX, actualStartY] = this.#convertBoardCoordsToArrayCoords(
-      startX,
-      startY
-    );
+    [startX, startY] = this.#convertBoardCoordsToArrayCoords(startX, startY);
+    console.log(isVertical);
     if (isVertical) {
-      for (let currentY = 0; currentY < length; currentY++) {
-        this.shipsOnBoardArray[actualStartY - currentY][actualStartX] = null;
+      for (let currentY = startY; currentY < startY + length; currentY++) {
+        this.shipsOnBoardArray[currentY][startX] = null;
       }
     } else {
-      for (let currentX = 0; currentX < length; currentX++) {
-        this.shipsOnBoardArray[actualStartY][actualStartX + currentX] = null;
+      for (let currentX = startX; currentX < startX + length; currentX++) {
+        this.shipsOnBoardArray[startY][currentX] = null;
       }
     }
     this.#removeShipFromListOfPlacedShips(id);
   }
 
-  place({ shipObj, isVertical, startX, startY }) {
-    if (!this.isPlacementLegal({ shipObj, isVertical, startX, startY })) {
+  place({ shipUI, isVertical, startX, startY }) {
+    if (!this.isPlacementLegal({ shipUI, isVertical, startX, startY })) {
       throw new Error("Given coordinates are out of bounds of the gameboard");
     }
 
     [startX, startY] = this.#convertBoardCoordsToArrayCoords(startX, startY);
 
     if (isVertical) {
-      for (let currentY = 0; currentY < shipObj.length; currentY++) {
-        this.shipsOnBoardArray[startY - currentY][startX] = shipObj;
+      for (
+        let currentY = startY;
+        currentY < startY + shipUI.length;
+        currentY++
+      ) {
+        this.shipsOnBoardArray[currentY][startX] = shipUI;
       }
     } else {
-      for (let currentX = 0; currentX < shipObj.length; currentX++) {
-        this.shipsOnBoardArray[startY][startX + currentX] = shipObj;
+      for (
+        let currentX = startX;
+        currentX < startX + shipUI.length;
+        currentX++
+      ) {
+        this.shipsOnBoardArray[startY][currentX] = shipUI;
       }
     }
 
-    this.#addShipToListOfShips(shipObj);
+    this.#addShipToListOfShips(shipUI);
   }
 
   isShipPlacedOnCoordinates(x, y) {
@@ -92,8 +98,8 @@ export class Gameboard {
   }
 
   get areAllShipsSunk() {
-    return this.listOfShips.every((shipObj) => {
-      return shipObj.isSunk;
+    return this.listOfShips.every((shipUI) => {
+      return shipUI.isSunk;
     });
   }
 
@@ -129,8 +135,8 @@ export class Gameboard {
     return false;
   }
 
-  #addShipToListOfShips(shipObj) {
-    this.listOfShips.push(shipObj);
+  #addShipToListOfShips(shipUI) {
+    this.listOfShips.push(shipUI);
   }
 
   #convertBoardCoordsToArrayCoords(x, y) {

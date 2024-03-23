@@ -140,7 +140,7 @@ h1 {
   align-items: center;
 }
 
-.rotated .ship-image {
+.vertical .ship-image {
   transform: rotate(90deg);
 }
 

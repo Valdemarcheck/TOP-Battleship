@@ -12,7 +12,12 @@ setGridTileSize(playerGrid);
 function fillGridWithCells(grid) {
   for (let y = 0; y < BOARD_SIZE; y++) {
     for (let x = 0; x < BOARD_SIZE; x++) {
-      const tile = new TileUI(document.createElement("div"), x + 1, y + 1);
+      const tile = new TileUI(
+        document.createElement("div"),
+        x + 1,
+        y + 1,
+        grid
+      );
       grid.appendChild(tile.tileElement);
     }
   }

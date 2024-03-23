@@ -1,6 +1,6 @@
 import { MAX_VERTICAL, MAX_HORIZONTAL, TILE_SIZE_PX } from "./constants";
 import { PubSub } from "./PubSub";
-import { enemyGrid } from "./utilities/grid-handler";
+import { enemyGrid, playerGrid } from "./utilities/grid-handler";
 
 function tileBelongsToEnemyGrid(tile, enemyGrid) {
   return tile.parentElement == enemyGrid;
@@ -53,6 +53,22 @@ function isShipOverTile(tile, ship) {
     isShipInsideByVertical(differenceTop, differenceBottom)
   );
 }
+
+export function getTilesForRotation(startX, startY, length, isVertical) {
+  const tilesThatShipWillTake = [];
+  const [actualX, actualY] = [startX - 1, startY - 1];
+  if (isVertical) {
+    for (let x = actualX; x < actualX + length; x++) {
+      tilesThatShipWillTake.push(TileUI.playerTiles[actualY][x]);
+    }
+  } else {
+    for (let y = actualY; y < actualY + length; y++) {
+      tilesThatShipWillTake.push(TileUI.playerTiles[y][actualX]);
+    }
+  }
+  return tilesThatShipWillTake;
+}
+
 export function getTilesUnderShip(shipUI) {
   return TileUI.allTiles.filter((tileUI) =>
     isShipOverTile(tileUI.tileElement, shipUI.shipElement)
@@ -61,8 +77,15 @@ export function getTilesUnderShip(shipUI) {
 
 export class TileUI {
   static allTiles = [];
-  constructor(tileElement, x, y) {
+  static playerTiles = [[]];
+  static enemyTiles = [[]];
+  constructor(tileElement, x, y, gridObj) {
     TileUI.allTiles.push(this);
+    if (gridObj === playerGrid) {
+      this.#pushTileToArray(TileUI.playerTiles);
+    } else {
+      this.#pushTileToArray(TileUI.enemyTiles);
+    }
     this.x = x;
     this.y = y;
     this.tileElement = tileElement;
@@ -81,5 +104,15 @@ export class TileUI {
     PubSub.on("noShipMovement", () => {
       this.tileElement.classList.remove("hoveredWithShip");
     });
+  }
+
+  #pushTileToArray(gridObj) {
+    const lastRowIndex = gridObj.length - 1;
+    if (gridObj[lastRowIndex].length < 10) {
+      gridObj[lastRowIndex].push(this);
+    } else {
+      gridObj.push([]);
+      gridObj[lastRowIndex + 1].push(this);
+    }
   }
 }
